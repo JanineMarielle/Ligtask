@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df584a5edc48adc4abaa662b7334601c, type: 3}
+  m_Name: Score Booster
+  m_EditorClassIdentifier: 
+  powerUpID: 1
+  displayName: Score Booster
+  description: Doubles the score you earn for the next five (5)  minigames. Great
+    for hitting milestones faster.  Can only be activated before a session and cannot 
+    be stacked.
+  cost: 80
+  icon: {fileID: 21300000, guid: bc473df6239803041bc029d04b6197d4, type: 3}
