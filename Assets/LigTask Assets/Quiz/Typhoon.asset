@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 054619df3e1d1c14bb076078c429ff3d, type: 3}
+  m_Name: Typhoon
+  m_EditorClassIdentifier: 
+  disasterName: Typhoon
+  questions:
+  - questionText: Which of these items is ESSENTIAL in a Go Bag?
+    options:
+    - Perfume
+    - Bracelet
+    - Bottled Water
+    - Toy Car
+    correctAnswerIndex: 2
+  - questionText: How many days of food and water should you prepare in your Go Bag?
+    options:
+    - 1 day
+    - 1 month
+    - At least 3 days
+    - More than a week
+    correctAnswerIndex: 2
+  - questionText: When authorities announce evacuation, what should you do?
+    options:
+    - Wait until floodwaters rise
+    - Follow the designated evacuation route
+    - Hide in the attic
+    - Stay outside and watch the storm
+    correctAnswerIndex: 1
+  - questionText: What should you do if your house is in a flood-prone area during
+      a typhoon?
+    options:
+    - Wait until the water reaches your knees
+    - Evacuate early to a safe place
+    - Stay on the rooftop and wave for help
+    - Keep valuables in the basement
+    correctAnswerIndex: 1
+  - questionText: Where should you stay during strong winds?
+    options:
+    - On the balcony
+    - Under a tree outside
+    - Indoors, stay away from glass windows and doors
+    - Near the riverbank to watch the rising water
+    correctAnswerIndex: 2
+  - questionText: Why should you avoid standing near glass windows during a typhoon?
+    options:
+    - The glass might break from strong winds
+    - The window blocks the radio signal
+    - The house gets hotter during the storm
+    - The rain sounds louder
+    correctAnswerIndex: 0
+  - questionText: If you are indoors during a typhoon, what should you do with electrical
+      appliances?
+    options:
+    - Do nothing
+    - Unplug appliances to avoid power surges
+    - Move them closer to windows
+    - Soak them in water to protect them
+    correctAnswerIndex: 1
+  - questionText: Which is the MOST RELIABLE source of updates during a typhoon?
+    options:
+    - Gossip from neighbors
+    - Social media posts without sources
+    - Guessing based on the clouds or weather
+    - Battery-powered radio or official announcements
+    correctAnswerIndex: 3
+  - questionText: If someone gets injured during the typhoon, what should you do
+      first?
+    options:
+    - "Move the injured person immediately to another place, even if it\u2019s not
+      safe yet"
+    - Wait for the rain to stop
+    - Give first aid if safe, then call authorities
+    - Take a video and post about it online
+    correctAnswerIndex: 2
+  - questionText: What should you AVOID after the storm?
+    options:
+    - Fallen power lines and damaged structures
+    - Furniture inside your house
+    - Fruits from trees
+    - Sweeping leaves
+    correctAnswerIndex: 0
+  - questionText: Why must stagnant water be cleared after a typhoon?
+    options:
+    - To water plants
+    - To keep the yard clean
+    - To prevent mosquito breeding
+    - To help fish swim
+    correctAnswerIndex: 2
+  - questionText: Why should you avoid wading in floodwaters after a typhoon?
+    options:
+    - Because it is cold
+    - Because it is fun to splash
+    - Because you might get sunburnt
+    - Because floodwater can contain leptospirosis
+    correctAnswerIndex: 3
+  - questionText: What should you do with spoiled food after a typhoon?
+    options:
+    - Throw it away to avoid food poisoning
+    - ' Eat it quickly before it smells'
+    - Feed it to pets
+    - Store it in the fridge again
+    correctAnswerIndex: 0
+  - questionText: What should you do before using tap water after a typhoon?
+    options:
+    - "Boil or treat it first to ensure it\u2019s safe"
+    - Nothing
+    - Use it only for washing clothes
+    - Mix it with juice to hide the taste
+    correctAnswerIndex: 0
+  - questionText: Even if the typhoon has ended, what hazard may still occur?
+    options:
+    - Wildfire
+    - "El Ni\xF1o"
+    - Flooding from heavy rains and rivers
+    - Earthquake in another country
+    correctAnswerIndex: 2

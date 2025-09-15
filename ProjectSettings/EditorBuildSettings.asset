@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 3fc8acdd13e6c734bafef6554d6fdbcd
@@ -15,8 +12,47 @@ EditorBuildSettings:
     path: Assets/Scenes/DisasterSelection.unity
     guid: b866b2796e6deb643bf502d6addf3a3c
   - enabled: 1
-    path: Assets/Scenes/Shop.unity
-    guid: 7795b5609e9f2d747a42d1bf917353aa
+    path: Assets/Scenes/TransitionScene.unity
+    guid: acdb668b8d3fadb47ad67d31b0c0ae2d
+  - enabled: 1
+    path: Assets/Scenes/Typhoon_Easy/TyphoonEasy.unity
+    guid: 46a54abdb34e7434395ae4fe0774b594
+  - enabled: 1
+    path: Assets/Scenes/Typhoon_Easy/Evacuate.unity
+    guid: 5e6a0fb2a89af1a478441f6ff275f9f5
+  - enabled: 1
+    path: Assets/Scenes/Typhoon_Easy/Windows.unity
+    guid: c3167f40c4ee8cb4892ad1689a944e03
+  - enabled: 1
+    path: Assets/Scenes/Typhoon_Easy/AvoidDebris.unity
+    guid: 6d0740d56c3596b409e2a4b56e1f11e6
+  - enabled: 1
+    path: Assets/Scenes/Typhoon_Easy/WaterBucket.unity
+    guid: 0868d23798ad6d444af3e379c44ee5e4
+  - enabled: 1
+    path: Assets/Scenes/Typhoon_Easy/TyphoonQuiz.unity
+    guid: 4697294f56d73104b8a52056b8dbb815
+  - enabled: 1
+    path: Assets/Scenes/Typhoon_Hard/TyphoonHard.unity
+    guid: 97e7d34b9f208d64d88c3bc0ee658821
+  - enabled: 1
+    path: Assets/Scenes/Typhoon_Hard/EvacuateHard.unity
+    guid: 312a1a1e829c9904bb5a8a9e8740ecfe
+  - enabled: 1
+    path: Assets/Scenes/Typhoon_Hard/WindowsHard.unity
+    guid: 7bfaab83b41e4c94892ad538c4b59d12
+  - enabled: 1
+    path: Assets/Scenes/Typhoon_Hard/AvoidDebrisHard.unity
+    guid: c748575d9b47fa844ba1d732bb94d46c
+  - enabled: 1
+    path: Assets/Scenes/Flood_Easy/FloodEasy.unity
+    guid: 695c3f46166a3a040a52a8d9a7537cca
+  - enabled: 1
+    path: Assets/Scenes/Flood_Easy/MoveItems.unity
+    guid: 2fbcd3b44b548be48a771bab1342a588
+  - enabled: 1
+    path: Assets/Scenes/Flood_Easy/CatchSupply.unity
+    guid: b8686bdd54189b94a939d1f655aee90f
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 061e291051c91b84f9bfe04ab1298497, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 6f38b93dbee2f1d46b34df302425afd6, type: 2}

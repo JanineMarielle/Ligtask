@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e87a7b734c7be6148a28a446f86451a2, type: 3}
+  m_Name: BasketBall
+  m_EditorClassIdentifier: 
+  itemName: BasketBall
+  itemSprite: {fileID: 21300000, guid: 7df069af7ced0f94ead8f82df649b0be, type: 3}
+  isNecessary: 0
