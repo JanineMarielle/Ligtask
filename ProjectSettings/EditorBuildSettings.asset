@@ -51,8 +51,23 @@ EditorBuildSettings:
     path: Assets/Scenes/Flood_Easy/MoveItems.unity
     guid: 2fbcd3b44b548be48a771bab1342a588
   - enabled: 1
+    path: Assets/Scenes/Flood_Easy/WaterValve.unity
+    guid: e8fd0e7b04cebed4f8e98f766fca9cc2
+  - enabled: 1
     path: Assets/Scenes/Flood_Easy/CatchSupply.unity
     guid: b8686bdd54189b94a939d1f655aee90f
+  - enabled: 1
+    path: Assets/Scenes/Flood_Hard/FloodHard.unity
+    guid: 52448fba64e7ce14e8838873ce68907e
+  - enabled: 1
+    path: Assets/Scenes/Flood_Hard/MoveItemsHard.unity
+    guid: ee30f467d7833e94199c82cf1280a5fb
+  - enabled: 1
+    path: Assets/Scenes/Flood_Hard/WaterValveHard.unity
+    guid: c946c7697efe63c42bf9e09bcace5ecb
+  - enabled: 1
+    path: Assets/Scenes/Flood_Hard/CatchSupplyHard.unity
+    guid: 6d549c6c67a6a934491bcdd8dbee32a0
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 061e291051c91b84f9bfe04ab1298497, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 6f38b93dbee2f1d46b34df302425afd6, type: 2}

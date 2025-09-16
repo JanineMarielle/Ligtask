@@ -15,7 +15,7 @@ public static class SceneTracker
         { "Typhoon_Easy", new string[] { "TyphoonEasy", "Evacuate", "Windows", "AvoidDebris", "TyphoonQuiz" } },
         { "Typhoon_Hard", new string[] { "TyphoonHard", "EvacuateHard", "WindowsHard", "AvoidDebrisHard", "WaterBucketHard" } },
         { "Flood_Easy", new string[] { "FloodEasy", "MoveItems", "WaterValve", "CatchSupply" } },
-        { "Flood_Hard", new string[] { "FloodHard", "SwitchLayerHard", "SandbagHard", "FloodQuizHard" } },
+        { "Flood_Hard", new string[] { "FloodHard", "MoveItemsHard", "WaterValveHard", "CatchSupplyHard" } },
     };
 
     private static string GetKey(string disaster, string difficulty)

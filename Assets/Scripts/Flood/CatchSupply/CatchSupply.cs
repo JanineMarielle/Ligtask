@@ -253,8 +253,7 @@ public class CatchSupply : MonoBehaviour, IGameStarter
         // ✅ Clamp score to prevent negatives
         score = Mathf.Clamp(score, 0, int.MaxValue);
 
-        // ✅ Define a passing score: e.g., 70% of the maximum possible
-        // Maximum possible = all necessary items caught * pointsPerCatch
+        // ✅ Define a passing score: 70% of the maximum possible
         int maxPossibleScore = necessarySpawned * pointsPerCatch;
         int threshold = Mathf.RoundToInt(maxPossibleScore * 0.7f); // 70%
 
@@ -264,24 +263,21 @@ public class CatchSupply : MonoBehaviour, IGameStarter
                   $"score={score}, maxPossibleScore={maxPossibleScore}, threshold={threshold}, passed={passed}");
 
         string currentScene = SceneManager.GetActiveScene().name;
-        string disaster = "Typhoon";
+        string disaster = "Flood";
         string difficulty = "Easy";
-        int miniGameIndex = 1;
+        int miniGameIndex = 2; // Assuming CatchSupply is MiniGame 2 for Flood
 
-        if (currentScene.Contains("Hard"))
+        // Difficulty check
+        if (currentScene.Equals("CatchSupplyHard"))
             difficulty = "Hard";
+        else if (currentScene.Equals("CatchSupply"))
+            difficulty = "Easy";
 
-        if (currentScene.StartsWith("TyphoonEasy") || currentScene.StartsWith("TyphoonHard"))
-        {
-            string numberPart = new string(
-                currentScene.ToCharArray(
-                    currentScene.IndexOf(difficulty) + difficulty.Length,
-                    currentScene.Length - (currentScene.IndexOf(difficulty) + difficulty.Length)
-                )
-            );
-            int.TryParse(numberPart, out miniGameIndex);
-        }
+        // Disaster check (always Flood for this mini-game)
+        if (currentScene.StartsWith("CatchSupply"))
+            disaster = "Flood";
 
+        // Save results
         GameResults.Score = score;
         GameResults.Passed = passed;
         GameResults.DisasterName = disaster;
@@ -291,8 +287,10 @@ public class CatchSupply : MonoBehaviour, IGameStarter
         DBManager.SaveProgress(disaster, difficulty, miniGameIndex, passed);
         SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
 
-        SceneManager.LoadScene("TransitionScene");
+        Debug.Log($"[CatchSupply] Game ended. Score: {score}, Passed: {passed}, Difficulty: {difficulty}, Scene: {currentScene}");
 
+
+        SceneManager.LoadScene("TransitionScene");
     }
 
 }

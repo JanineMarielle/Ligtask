@@ -13,6 +13,7 @@ public class ItemHandler : MonoBehaviour, IGameStarter
     public GoBagDataTest data;
     public Transform gridParent;
     public RectTransform bagDropZone;
+    public FeedbackManager feedbackManager; 
 
     [Header("Prefab")]
     public GameObject itemPrefab;
@@ -103,6 +104,10 @@ public class ItemHandler : MonoBehaviour, IGameStarter
                     collectedNecessaryItems.Add(item);
                     score += 20;
 
+                    // ✅ Positive feedback
+                    if (feedbackManager != null)
+                        feedbackManager.ShowPositive();
+
                     // Run fall animation into the bag
                     StartCoroutine(FallIntoBag(draggable.gameObject));
 
@@ -117,9 +122,15 @@ public class ItemHandler : MonoBehaviour, IGameStarter
                 }
                 else
                 {
-                    // Reset item if not necessary or already collected
-                    draggable.transform.SetParent(draggable.originalParent);
-                    draggable.transform.localPosition = Vector3.zero;
+                    // ❌ Wrong or duplicate item → deduct points & feedback
+                    score = Mathf.Max(0, score - 10); // prevent negative score
+
+                    if (feedbackManager != null)
+                        feedbackManager.ShowNegative();
+
+                    Destroy(draggable.gameObject);
+
+                    Debug.Log($"Wrong item! Score deducted. Current score: {score}");
                 }
             }
             else
@@ -142,16 +153,12 @@ public class ItemHandler : MonoBehaviour, IGameStarter
     {
         RectTransform rect = obj.GetComponent<RectTransform>();
 
-        // 🔹 Re-parent to the bag’s parent so it can be layered correctly
         obj.transform.SetParent(bagDropZone.parent, true);
 
-        // 🔹 Ensure the item is drawn *behind* the bag
         obj.transform.SetSiblingIndex(bagDropZone.GetSiblingIndex());
 
-        // Start higher above the bag
         Vector3 startPos = bagDropZone.position + new Vector3(0, 500f, 0); // higher offset
 
-        // Padding inside bag
         float paddingX = rect.rect.width * 0.6f;
         float paddingY = rect.rect.height * 0.6f;
 
@@ -175,7 +182,6 @@ public class ItemHandler : MonoBehaviour, IGameStarter
 
         rect.position = endPos;
 
-        // Disable dragging once inside the bag
         DraggableItem drag = obj.GetComponent<DraggableItem>();
         if (drag != null) drag.enabled = false;
 
@@ -214,9 +220,9 @@ public class ItemHandler : MonoBehaviour, IGameStarter
         if (currentRound <= totalRounds)
         {
             Debug.Log($"Starting round {currentRound}...");
-            SpawnItems(); // spawn new items
+            SpawnItems();
 
-            // Ensure each slot's child draggable is enabled and has correct parent
+            // Ensure draggables are reset properly
             foreach (Transform slot in slots)
             {
                 foreach (Transform child in slot)
@@ -284,32 +290,35 @@ public class ItemHandler : MonoBehaviour, IGameStarter
             if (draggable != null) draggable.enabled = false;
         }
 
-        int maxScore = spawnedNecessaryItems.Count * 20; 
+        int maxScore = spawnedNecessaryItems.Count * 20;
         int passingScore = Mathf.RoundToInt(maxScore * 0.7f);
 
         string currentScene = SceneManager.GetActiveScene().name;
-        string disaster = "Typhoon";
+        string disaster = "Flood";
         string difficulty = "Easy";
 
-        if (currentScene.Contains("Hard")) difficulty = "Hard";
-        if (currentScene.StartsWith("Typhoon")) disaster = "Typhoon";
-        else if (currentScene.StartsWith("Flood")) disaster = "Flood";
+        if (currentScene.Equals("MoveItemsHard"))
+            difficulty = "Hard";
+        else if (currentScene.Equals("MoveItems"))
+            difficulty = "Easy";
+
+        if (currentScene.StartsWith("MoveItems"))
+            disaster = "Flood";
 
         GameResults.Score = score;
         GameResults.Passed = score >= passingScore;
         GameResults.DisasterName = disaster;
-        GameResults.MiniGameIndex = 1;
+        GameResults.MiniGameIndex = 1; 
         GameResults.Difficulty = difficulty;
 
-        // 🔹 Save only pass/fail, not scores
         DBManager.SaveProgress(disaster, difficulty, GameResults.MiniGameIndex, GameResults.Passed);
 
-        // 🔹 Keep scene tracking for transition
         SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
 
-        Debug.Log($"[ItemHandler] Game ended. Score: {score}, Passed: {GameResults.Passed}");
+        Debug.Log($"[ItemHandler] Game ended. Score: {score}, Passed: {GameResults.Passed}, Difficulty: {difficulty}, Scene: {currentScene}");
 
         SceneManager.LoadScene("TransitionScene");
+
     }
 
     private void OnDestroy()

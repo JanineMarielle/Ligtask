@@ -7,11 +7,13 @@ public class ValveController : MonoBehaviour, IGameStarter
     [Header("References")]
     public RectTransform valveImage;  
     public Slider progressBar;        
+    public TimerLogic timerLogic;      // Reference to your TimerLogic component
 
     [Header("Settings")]
     public float requiredRotation = 360f;     
     public float sensitivity = 1f;            
     public float progressMultiplier = 0.05f;  
+    public float timerDuration = 30f;         // Editable in Inspector
 
     private float accumulatedRotation = 0f;
     private Vector2 lastPos;
@@ -31,6 +33,18 @@ public class ValveController : MonoBehaviour, IGameStarter
             progressBar.maxValue = requiredRotation;
             progressBar.value = 0;
         }
+
+        if (timerLogic != null)
+        {
+            // Subscribe to timer end event
+            timerLogic.OnTimerFinished += HandleTimerFinished;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (timerLogic != null)
+            timerLogic.OnTimerFinished -= HandleTimerFinished;
     }
 
     void Update()
@@ -97,14 +111,10 @@ public class ValveController : MonoBehaviour, IGameStarter
         float angle = Vector2.SignedAngle(prevDir, currDir);
 
         if (angle > 0f && accumulatedRotation <= 0f)
-        {
             angle = 0f;
-        }
 
         if (angle < 0f && accumulatedRotation >= requiredRotation)
-        {
             angle = 0f;
-        }
 
         valveImage.Rotate(Vector3.forward, angle * sensitivity);
 
@@ -117,6 +127,7 @@ public class ValveController : MonoBehaviour, IGameStarter
 
         if (accumulatedRotation >= requiredRotation)
         {
+            score = maxScore; // Full completion = perfect score
             EndGame();
         }
     }
@@ -130,27 +141,44 @@ public class ValveController : MonoBehaviour, IGameStarter
             progressBar.value = 0f;
 
         score = 0;
+
+        if (timerLogic != null)
+            timerLogic.StartTimer(timerDuration);
+
         Debug.Log("[Valve] Game Started!");
     }
 
-    // --- Endgame Logic (matches GoBagGameManager) ---
+    private void HandleTimerFinished()
+    {
+        // Timer ran out, compute score based on progress
+        float progressPercent = accumulatedRotation / requiredRotation;
+        score = Mathf.RoundToInt(progressPercent * maxScore);
+
+        EndGame();
+    }
+
     private void EndGame()
     {
+        gameStarted = false;
+
+        if (timerLogic != null)
+            timerLogic.StopTimer();
+
         score = Mathf.Clamp(score, 0, maxScore);
 
         string currentScene = SceneManager.GetActiveScene().name;
-        string disaster = "Typhoon"; // default
-        string difficulty = "Easy";  // default
-        int miniGameIndex = 1;       // Valve mini-game index
+        string disaster = "Flood"; 
+        string difficulty = "Easy"; 
+        int miniGameIndex = 1;      
 
-        if (currentScene.StartsWith("TyphoonEasy"))
+        if (currentScene.StartsWith("WaterValve"))
         {
-            disaster = "Typhoon";
+            disaster = "Flood";
             difficulty = "Easy";
         }
-        else if (currentScene.StartsWith("TyphoonHard"))
+        else if (currentScene.StartsWith("WaterValveHard"))
         {
-            disaster = "Typhoon";
+            disaster = "Flood";
             difficulty = "Hard";
         }
 

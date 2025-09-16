@@ -145,8 +145,21 @@ public class DebrisSpawner : MonoBehaviour
         float fillRatio = 0.7f; // default
 
         // 🔹 Adjust debris density per difficulty
-        if (diff == "Easy") fillRatio = Random.Range(0.05f, 0.1f);   // very sparse
-        else if (diff == "Hard") fillRatio = Random.Range(0.7f, 0.85f);
+        if (diff == "Easy")
+        {
+            // Instead of extremely low ratio (0.05f–0.1f),
+            // scale with screen width & debris size
+            float avgDebrisWidth = debrisPrefabs[0].GetComponent<RectTransform>().rect.width;
+            int maxPossible = Mathf.Max(1, Mathf.FloorToInt(availableWidth / avgDebrisWidth));
+
+            // At least 20–40% of possible slots get debris
+            int debrisCount = Mathf.Clamp(Mathf.RoundToInt(maxPossible * Random.Range(0.2f, 0.4f)), 1, maxPossible);
+            fillRatio = (float)debrisCount / maxPossible;
+        }
+        else if (diff == "Hard")
+        {
+            fillRatio = Random.Range(0.7f, 0.85f);
+        }
 
         float fillWidth = availableWidth * fillRatio;
         float startX = xMin + (availableWidth - fillWidth) / 2f;
@@ -169,10 +182,10 @@ public class DebrisSpawner : MonoBehaviour
 
             float debrisX = currentX + debrisWidth / 2f;
 
-            // 🔹 Base spawn Y higher and spread out more for Easy mode
+            // 🔹 Base spawn Y
             float spawnY = spawnArea.rect.height / 2f + debrisHeight / 2f + safeLaneVerticalBuffer;
             if (diff == "Easy")
-                spawnY += debrisHeight * Random.Range(1.0f, 1.5f); // proportional spacing
+                spawnY += debrisHeight * Random.Range(1.0f, 1.5f);
 
             rt.anchoredPosition = new Vector2(debrisX, spawnY);
 
@@ -180,12 +193,13 @@ public class DebrisSpawner : MonoBehaviour
             mover.Init(fallSpeed, manager);
             manager.RegisterDebris();
 
-            // 🔹 Proportional horizontal spacing
+            // 🔹 Proportional spacing
             if (diff == "Easy")
-                currentX += debrisWidth * Random.Range(1.5f, 2.0f); // much wider gaps
+                currentX += debrisWidth * Random.Range(1.5f, 2.0f);
             else
                 currentX += debrisWidth + Random.Range(10f, 30f);
         }
+
     }
 
     private void SpawnOffCounterDebris()

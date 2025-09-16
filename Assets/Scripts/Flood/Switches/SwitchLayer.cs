@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
 public class SwitchLayer : MonoBehaviour, IGameStarter
 {
@@ -13,6 +14,9 @@ public class SwitchLayer : MonoBehaviour, IGameStarter
     public RectTransform mainBreaker;  
     public RectTransform mainSwitch;    
     private Vector2 mainSwitchHomePos;   
+    
+    [Header("UI References")]
+    public TextMeshProUGUI roundText; 
 
     [Header("Timer Settings")]
     public TimerLogic timerLogic;            // Reference to your TimerLogic component
@@ -116,6 +120,12 @@ public class SwitchLayer : MonoBehaviour, IGameStarter
         }
 
         currentRound++;
+
+        // ✅ Update round display text
+        if (roundText != null)
+        {
+            roundText.text = $"Round: {currentRound}/{totalRounds}";
+        }
 
         if (!firstRound)
         {
@@ -321,17 +331,17 @@ public class SwitchLayer : MonoBehaviour, IGameStarter
         Debug.Log($"[SwitchLayer] Final Scoring -> Base: {totalPossible}, Penalty: {penalty} ({totalRemainingOn} switches ON), Final Score: {score}");
 
         string currentScene = SceneManager.GetActiveScene().name;
-        string disaster = "Typhoon";
+        string disaster = "Flood";
         string difficulty = "Easy";
 
-        if (currentScene.StartsWith("TyphoonEasy"))
+        if (currentScene.StartsWith("FloodEasy"))
         {
-            disaster = "Typhoon";
+            disaster = "Flood";
             difficulty = "Easy";
         }
-        else if (currentScene.StartsWith("TyphoonHard"))
+        else if (currentScene.StartsWith("FloodHard"))
         {
-            disaster = "Typhoon";
+            disaster = "Flood";
             difficulty = "Hard";
         }
 

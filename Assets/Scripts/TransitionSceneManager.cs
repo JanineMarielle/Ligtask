@@ -40,11 +40,9 @@ public class TransitionSceneManager : MonoBehaviour
         Debug.Log($"Last mini-game: {SceneTracker.LastMinigameScene}");
         Debug.Log($"Current Disaster: {currentDisaster}, Difficulty: {currentDifficulty}");
 
-        // Start the corresponding animation
         StartCoroutine(PlayAnimation(passed ? passFrames : failFrames));
     }
 
-    // Coroutine for looping the frame animation
     private IEnumerator PlayAnimation(Sprite[] frames)
     {
         int index = 0;

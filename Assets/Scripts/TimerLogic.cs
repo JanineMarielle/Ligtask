@@ -10,8 +10,8 @@ public class TimerLogic : MonoBehaviour
     public TextMeshProUGUI timerText;
 
     [Header("Padding Settings")]
-    public float leftPadding = 20f;
-    public float rightPadding = 20f;
+    public float leftPadding = 200f;
+    public float rightPadding = 280f;
     public float topPadding = 20f;
     public float textRightOffset = 10f;
 
@@ -48,19 +48,22 @@ public class TimerLogic : MonoBehaviour
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, -topPadding);
         }
 
-        // Position timerText at right of slider
+        // Position timerText at right of slider (local space, not world)
         if (timerSlider != null && timerText != null)
         {
             RectTransform sliderRT = timerSlider.GetComponent<RectTransform>();
             RectTransform textRT = timerText.GetComponent<RectTransform>();
+
+            // Anchor text to the right-middle of the slider
+            textRT.SetParent(sliderRT);
+            textRT.anchorMin = new Vector2(1f, 0.5f);
+            textRT.anchorMax = new Vector2(1f, 0.5f);
             textRT.pivot = new Vector2(0f, 0.5f);
 
-            Vector3[] corners = new Vector3[4];
-            sliderRT.GetWorldCorners(corners);
-            Vector3 rightEdge = corners[3];
-
-            textRT.position = rightEdge + new Vector3(textRightOffset, 0f, 0f);
+            // Apply local offset
+            textRT.anchoredPosition = new Vector2(textRightOffset, 0f);
         }
+
     }
 
     public void StartTimer(float newDuration)

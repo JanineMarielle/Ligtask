@@ -75,7 +75,7 @@ public class DebrisMover : MonoBehaviour
             }
 
             // Safety: destroy debris if somehow goes way off-screen
-            if (rt.anchoredPosition.y < -Screen.height)
+            if (rt.anchoredPosition.y < -Screen.height - 500f)
             {
                 Destroy(gameObject);
             }

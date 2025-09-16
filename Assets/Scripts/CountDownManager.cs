@@ -25,6 +25,10 @@ public class CountDownManager : MonoBehaviour
         gameStarter = FindObjectsOfType<MonoBehaviour>()
               .OfType<IGameStarter>()
               .FirstOrDefault();
+
+        // make sure raycast is off initially
+        if (countdownText != null)
+            countdownText.raycastTarget = false;
     }
 
     void OnEnable()
@@ -56,6 +60,9 @@ public class CountDownManager : MonoBehaviour
         int timeLeft = countdownTime;
         countdownText.text = "";
 
+        // Enable raycast while countdown is active
+        countdownText.raycastTarget = true;
+
         while (timeLeft > 0)
         {
             countdownText.text = timeLeft.ToString();
@@ -82,6 +89,9 @@ public class CountDownManager : MonoBehaviour
 
         countdownText.text = "";
 
+        // Disable raycast after countdown ends
+        countdownText.raycastTarget = false;
+
         // Start the game
         if (gameStarter == null)
         {
@@ -102,5 +112,8 @@ public class CountDownManager : MonoBehaviour
     {
         countdownFinished = false;
         countdownText.text = "";
+
+        // also ensure raycast is off when reset
+        countdownText.raycastTarget = false;
     }
 }
