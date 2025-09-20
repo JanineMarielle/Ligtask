@@ -163,7 +163,7 @@ public class SwipeLeafManager : MonoBehaviour, IGameStarter
         foreach (var leaf in leaves)
         {
             // Use the main canvas camera for ScreenPoint conversion
-            Vector2 leafPos = RectTransformUtility.WorldToScreenPoint(canvas.worldCamera, leaf.transform.position);
+            Vector2 leafPos = RectTransformUtility.WorldToScreenPoint(null, leaf.transform.position);
 
             float dist = DistancePointToLineSegment(leafPos, start, end);
 
