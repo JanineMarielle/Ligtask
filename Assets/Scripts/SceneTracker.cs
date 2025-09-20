@@ -12,8 +12,8 @@ public static class SceneTracker
 
     private static Dictionary<string, string[]> miniGameSequences = new Dictionary<string, string[]>()
     {
-        { "Typhoon_Easy", new string[] { "TyphoonEasy", "Evacuate", "Windows", "AvoidDebris", "TyphoonQuiz" } },
-        { "Typhoon_Hard", new string[] { "TyphoonHard", "EvacuateHard", "WindowsHard", "AvoidDebrisHard", "WaterBucketHard" } },
+        { "Typhoon_Easy", new string[] { "TyphoonEasy", "Evacuate", "Windows", "AvoidDebris", "LeavesGame", "TyphoonQuiz" } },
+        { "Typhoon_Hard", new string[] { "TyphoonHard", "EvacuateHard", "WindowsHard", "AvoidDebrisHard", "LeavesHard" } },
         { "Flood_Easy", new string[] { "FloodEasy", "MoveItems", "WaterValve", "CatchSupply" } },
         { "Flood_Hard", new string[] { "FloodHard", "MoveItemsHard", "WaterValveHard", "CatchSupplyHard" } },
     };
