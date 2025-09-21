@@ -48,22 +48,19 @@ public class TimerLogic : MonoBehaviour
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, -topPadding);
         }
 
-        // Position timerText at right of slider (local space, not world)
+        // Position timerText at right of slider
         if (timerSlider != null && timerText != null)
         {
             RectTransform sliderRT = timerSlider.GetComponent<RectTransform>();
             RectTransform textRT = timerText.GetComponent<RectTransform>();
 
-            // Anchor text to the right-middle of the slider
             textRT.SetParent(sliderRT);
             textRT.anchorMin = new Vector2(1f, 0.5f);
             textRT.anchorMax = new Vector2(1f, 0.5f);
             textRT.pivot = new Vector2(0f, 0.5f);
 
-            // Apply local offset
             textRT.anchoredPosition = new Vector2(textRightOffset, 0f);
         }
-
     }
 
     public void StartTimer(float newDuration)
@@ -80,10 +77,14 @@ public class TimerLogic : MonoBehaviour
 
         if (timerSlider != null)
         {
+            timerSlider.gameObject.SetActive(true);
             timerSlider.minValue = 0f;
             timerSlider.maxValue = 1f;
             timerSlider.value = 1f;
         }
+
+        if (timerText != null)
+            timerText.gameObject.SetActive(true);
 
         UpdateTimerText();
     }
@@ -91,11 +92,12 @@ public class TimerLogic : MonoBehaviour
     public void StopTimer()
     {
         isRunning = false;
+        HideTimerUI();
     }
 
     void Update()
     {
-        if (!isRunning || isPaused) return; // respect pause
+        if (!isRunning || isPaused) return;
 
         timer += Time.deltaTime;
 
@@ -107,6 +109,7 @@ public class TimerLogic : MonoBehaviour
         if (timer >= duration)
         {
             isRunning = false;
+            HideTimerUI();
             OnTimerFinished?.Invoke();
         }
     }
@@ -120,5 +123,17 @@ public class TimerLogic : MonoBehaviour
         int seconds = remainingSeconds % 60;
 
         timerText.text = (minutes > 0) ? $"Time: {minutes:D2}:{seconds:D2}" : $"{seconds:D2}";
+    }
+
+    /// <summary>
+    /// Hides both the timer slider and text
+    /// </summary>
+    public void HideTimerUI()
+    {
+        if (timerSlider != null)
+            timerSlider.gameObject.SetActive(false);
+
+        if (timerText != null)
+            timerText.gameObject.SetActive(false);
     }
 }

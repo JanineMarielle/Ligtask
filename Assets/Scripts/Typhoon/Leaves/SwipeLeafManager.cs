@@ -162,20 +162,31 @@ public class SwipeLeafManager : MonoBehaviour, IGameStarter
         LeafController[] leaves = FindObjectsOfType<LeafController>();
         foreach (var leaf in leaves)
         {
-            // Use the main canvas camera for ScreenPoint conversion
-            Vector2 leafPos = RectTransformUtility.WorldToScreenPoint(null, leaf.transform.position);
+            RectTransform leafRt = leaf.GetComponent<RectTransform>();
+            Vector3[] corners = new Vector3[4];
+            leafRt.GetWorldCorners(corners);
 
-            float dist = DistancePointToLineSegment(leafPos, start, end);
-
-            // Only affect leaves within swipe radius AND within the clamped line segment
+            bool shouldMove = false;
             float lineLength = (end - start).magnitude;
-            float projLength = Vector2.Dot((leafPos - start), (end - start).normalized);
-            if (dist < swipeRadius && projLength >= 0 && projLength <= lineLength)
+
+            foreach (var corner in corners)
             {
-                leaf.Push(dir, leafPushDistance);
+                Vector2 cornerScreenPos = RectTransformUtility.WorldToScreenPoint(null, corner);
+                float dist = DistancePointToLineSegment(cornerScreenPos, start, end);
+                float projLength = Vector2.Dot((cornerScreenPos - start), (end - start).normalized);
+
+                if (dist < swipeRadius && projLength >= 0 && projLength <= lineLength)
+                {
+                    shouldMove = true;
+                    break; // only need one corner to trigger
+                }
             }
+
+            if (shouldMove)
+                leaf.Push(dir, leafPushDistance);
         }
     }
+
 
     float DistancePointToLineSegment(Vector2 point, Vector2 a, Vector2 b)
     {
