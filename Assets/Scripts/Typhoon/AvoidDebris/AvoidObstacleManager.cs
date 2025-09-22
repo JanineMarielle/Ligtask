@@ -182,7 +182,7 @@ public class AvoidObstacleManager : MonoBehaviour, IGameStarter
     {
         totalDebrisSpawned++;
         maxScore = totalDebrisSpawned * pointsPerDebris;
-        passingScore = Mathf.CeilToInt(maxScore * 0.7f);
+    passingScore = Mathf.CeilToInt(maxScore * 0.6f);
     }
 
     public void OnDebrisDodged()

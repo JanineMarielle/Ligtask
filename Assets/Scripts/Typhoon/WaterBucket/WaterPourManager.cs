@@ -158,9 +158,9 @@ public class WaterPourManager : MonoBehaviour, IGameStarter
             int.TryParse(numPart, out miniGameIndex);
         }
 
-        int maxScore = pointsPerRound * totalRounds;
-        int passingScore = Mathf.CeilToInt(maxScore * 0.7f);
-        bool passed = success && score >= passingScore;
+    int maxScore = pointsPerRound * totalRounds;
+    int passingScore = Mathf.CeilToInt(maxScore * 0.6f);
+    bool passed = success && score >= passingScore;
 
         GameResults.Score = score;
         GameResults.Passed = passed;

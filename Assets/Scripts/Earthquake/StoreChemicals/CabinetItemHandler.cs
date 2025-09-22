@@ -378,8 +378,8 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
     {
         gameRunning = false;
 
-        int maxScore = spawnedNecessaryItems.Count * 20;
-        int passingScore = Mathf.RoundToInt(maxScore * 0.7f);
+    int maxScore = spawnedNecessaryItems.Count * 20;
+    int passingScore = Mathf.RoundToInt(maxScore * 0.6f);
 
         GameResults.Score = score;
         GameResults.Passed = score >= passingScore;

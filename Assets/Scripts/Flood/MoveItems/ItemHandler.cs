@@ -290,8 +290,8 @@ public class ItemHandler : MonoBehaviour, IGameStarter
             if (draggable != null) draggable.enabled = false;
         }
 
-        int maxScore = spawnedNecessaryItems.Count * 20;
-        int passingScore = Mathf.RoundToInt(maxScore * 0.7f);
+            int maxScore = spawnedNecessaryItems.Count * 20;
+            int passingScore = Mathf.RoundToInt(maxScore * 0.6f);
 
         string currentScene = SceneManager.GetActiveScene().name;
         string disaster = "Flood";

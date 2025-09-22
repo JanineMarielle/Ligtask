@@ -277,7 +277,8 @@ public class HammerController : MonoBehaviour, IGameStarter
             difficulty = "Hard";
         }
 
-        bool passed = score >= passingScore;
+    passingScore = Mathf.RoundToInt(maxScore * 0.6f);
+    bool passed = score >= passingScore;
 
         GameResults.Score = score;
         GameResults.Passed = passed;

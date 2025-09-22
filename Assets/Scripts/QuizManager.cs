@@ -155,7 +155,7 @@ public class QuizManager : MonoBehaviour, IGameStarter
             int.TryParse(numPart, out miniGameIndex);
         }
 
-        int passingScore = Mathf.RoundToInt(maxScore * 0.7f);
+    int passingScore = Mathf.RoundToInt(maxScore * 0.6f);
         bool passed = score >= passingScore;
 
         // Save temporary results

@@ -252,7 +252,7 @@ public class ProgressGround : MonoBehaviour, IGameStarter
 
     private void EndGame()
     {
-        bool passed = (correctInputs >= totalInputs * 0.7f); // 70% threshold
+    bool passed = (correctInputs >= totalInputs * 0.6f); // 60% threshold
         int score = correctInputs * 10; // e.g., 10 points per correct arrow
 
         string currentScene = SceneManager.GetActiveScene().name;

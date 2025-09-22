@@ -34,7 +34,7 @@ public class SwipeLeafManager : MonoBehaviour, IGameStarter
 
     [Header("Game Scoring")]
     public int maxScore = 100;
-    public int passingScore = 60;
+    public int passingScore = 60; // If dynamically calculated elsewhere, ensure 60% is used
     private int score = 0;
 
     private void Start()

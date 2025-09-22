@@ -56,19 +56,26 @@ public class DBManager : MonoBehaviour
         return db.Table<DisasterProgress>().FirstOrDefault(x => x.DisasterName == disasterName);
     }
 
-    public static void SaveProgress(string disasterName, string difficulty, int miniGameIndex, bool passed)
+    public static void SaveProgress(string disasterName, string difficulty, int miniGameIndex, int score)
     {
         if (db == null) Init();
 
-        // 🔹 Handle minigame-level progress
+        bool passed = false;
+
+        // 🔹 Apply score rules
+        if (difficulty == "Easy" && score >= 60) passed = true;
+        else if (difficulty == "Hard" && score >= 60) passed = true;
+        else if (difficulty == "Quiz" && score >= 70) passed = true;
+
+        // Handle minigame-level progress
         var existing = db.Table<MiniGameProgress>()
             .FirstOrDefault(x => x.DisasterName == disasterName
-                              && x.Difficulty == difficulty
-                              && x.MiniGameIndex == miniGameIndex);
+                            && x.Difficulty == difficulty
+                            && x.MiniGameIndex == miniGameIndex);
 
         if (existing != null)
         {
-            if (!existing.Passed && passed) // only update if new result is better
+            if (!existing.Passed && passed)
             {
                 existing.Passed = true;
                 db.Update(existing);
@@ -85,14 +92,13 @@ public class DBManager : MonoBehaviour
             });
         }
 
-        // 🔹 Handle disaster-level unlock logic
+        // Handle disaster-level progress
         var progress = GetDisasterProgress(disasterName);
         if (progress == null) return;
 
         if (difficulty == "Easy" && passed)
         {
             progress.EasyCompleted = true;
-            progress.HardUnlocked = true;
         }
         else if (difficulty == "Hard" && passed)
         {
@@ -101,6 +107,7 @@ public class DBManager : MonoBehaviour
         else if (difficulty == "Quiz" && passed)
         {
             progress.QuizCompleted = true;
+            progress.HardUnlocked = true; // 🔑 Unlock Hard only via Quiz
             UnlockNextDisaster(disasterName);
         }
 

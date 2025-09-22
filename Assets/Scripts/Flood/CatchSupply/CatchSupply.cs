@@ -253,9 +253,9 @@ public class CatchSupply : MonoBehaviour, IGameStarter
         // ✅ Clamp score to prevent negatives
         score = Mathf.Clamp(score, 0, int.MaxValue);
 
-        // ✅ Define a passing score: 70% of the maximum possible
-        int maxPossibleScore = necessarySpawned * pointsPerCatch;
-        int threshold = Mathf.RoundToInt(maxPossibleScore * 0.7f); // 70%
+    // ✅ Define a passing score: 60% of the maximum possible
+    int maxPossibleScore = necessarySpawned * pointsPerCatch;
+    int threshold = Mathf.RoundToInt(maxPossibleScore * 0.6f); // 60%
 
         bool passed = score >= threshold;
 
