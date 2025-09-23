@@ -15,7 +15,6 @@ MonoBehaviour:
   lines:
   - 'Your street is starting to flood, and the radio announced urgent evacuation
     orders. '
-  - "Watch the sequence of arrows carefully\u2014up, down, left, or right\u2014and
-    repeat them in the same order. Each correct move brings you closer to safety."
-  - Be quick and pay attention, because making a mistake can slow you down. Can you
-    remember the sequence and evacuate safely?
+  - "Watch the sequence of arrows carefully\u2014up, down, or right\u2014and repeat
+    them in the same order. "
+  - Be quick and pay attention, each correct move brings you closer to safety.

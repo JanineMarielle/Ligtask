@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class HammerController : MonoBehaviour, IGameStarter
 {
@@ -48,9 +49,33 @@ public class HammerController : MonoBehaviour, IGameStarter
     public delegate void RoundEndDelegate(bool success);
     public event RoundEndDelegate OnRoundEnd;
 
+    private bool isPaused = false;
+
     private void Start()
     {
         SetupHammerRange();
+    }
+
+    private void OnEnable()
+    {
+        SidePanelController.OnPauseStateChanged += HandlePauseState;
+    }
+
+    private void OnDisable()
+    {
+        SidePanelController.OnPauseStateChanged -= HandlePauseState;
+    }
+
+    private void HandlePauseState(bool paused)
+    {
+        isPaused = paused;
+
+        // Stop hammer animation when paused
+        if (hammerAnimator != null)
+            hammerAnimator.enabled = !paused;
+
+        // Immediately prevent strikes while paused
+        canStrike = !paused;
     }
 
     private void SetupHammerRange()
@@ -74,11 +99,12 @@ public class HammerController : MonoBehaviour, IGameStarter
 
     private void Update()
     {
-        if (!gameActive) return;
+        if (!gameActive || isPaused) return;
 
         if (!isStriking)
             SlideHammer();
 
+        // Only allow striking if not paused
         if (!isStriking && canStrike && (Input.GetMouseButtonDown(0) || Input.touchCount > 0))
             TryHammer();
     }
@@ -245,40 +271,26 @@ public class HammerController : MonoBehaviour, IGameStarter
         gameActive = true;
     }
 
-    // 🔹 Endgame with scoring + earthquake mapping
     private void EndGame()
     {
         int maxScore = totalRounds * 50;
-        int passingScore = Mathf.RoundToInt(maxScore * 0.7f);
+
+        // ✅ Passing threshold = 60% (consistent with other games)
+        int passingScore = Mathf.RoundToInt(maxScore * 0.6f);
 
         string currentScene = SceneManager.GetActiveScene().name;
-        string disaster = "Typhoon"; 
-        string difficulty = "Easy";  
-        int miniGameIndex = 2; // example index for Hammering
 
-        if (currentScene.StartsWith("TyphoonEasy"))
+        string disaster = "Earthquake";
+        string difficulty = currentScene.Contains("Hard") ? "Hard" : "Easy";
+
+        int miniGameIndex = 2; // fallback
+        string digits = System.Text.RegularExpressions.Regex.Match(currentScene, @"\d+").Value;
+        if (!string.IsNullOrEmpty(digits))
         {
-            disaster = "Typhoon";
-            difficulty = "Easy";
-        }
-        else if (currentScene.StartsWith("TyphoonHard"))
-        {
-            disaster = "Typhoon";
-            difficulty = "Hard";
-        }
-        else if (currentScene == "BraceFurniture")
-        {
-            disaster = "Earthquake";
-            difficulty = "Easy";
-        }
-        else if (currentScene == "FurnitureHard")
-        {
-            disaster = "Earthquake";
-            difficulty = "Hard";
+            int.TryParse(digits, out miniGameIndex);
         }
 
-    passingScore = Mathf.RoundToInt(maxScore * 0.6f);
-    bool passed = score >= passingScore;
+        bool passed = score >= passingScore;
 
         GameResults.Score = score;
         GameResults.Passed = passed;
@@ -288,6 +300,8 @@ public class HammerController : MonoBehaviour, IGameStarter
 
         DBManager.SaveProgress(disaster, difficulty, miniGameIndex, passed);
         SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
+
+        Debug.Log($"[BraceFurniture] EndGame -> Score: {score}, Passed: {passed}, Difficulty: {difficulty}, Index: {miniGameIndex}, Scene: {currentScene}");
 
         SceneManager.LoadScene("TransitionScene");
     }

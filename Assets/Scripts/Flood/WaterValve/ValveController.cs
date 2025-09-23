@@ -155,9 +155,9 @@ public class ValveController : MonoBehaviour, IGameStarter
         score = Mathf.RoundToInt(progressPercent * maxScore);
 
         EndGame();
-    }
+        }
 
-    private void EndGame()
+        private void EndGame()
     {
         gameStarted = false;
 
@@ -167,23 +167,19 @@ public class ValveController : MonoBehaviour, IGameStarter
         score = Mathf.Clamp(score, 0, maxScore);
 
         string currentScene = SceneManager.GetActiveScene().name;
-        string disaster = "Flood"; 
-        string difficulty = "Easy"; 
-        int miniGameIndex = 1;      
 
-        if (currentScene.StartsWith("WaterValve"))
+        string disaster = "Flood";
+        string difficulty = currentScene.Contains("Hard") ? "Hard" : "Easy";
+
+        int miniGameIndex = 3; 
+        string digits = System.Text.RegularExpressions.Regex.Match(currentScene, @"\d+").Value;
+        if (!string.IsNullOrEmpty(digits))
         {
-            disaster = "Flood";
-            difficulty = "Easy";
-        }
-        else if (currentScene.StartsWith("WaterValveHard"))
-        {
-            disaster = "Flood";
-            difficulty = "Hard";
+            int.TryParse(digits, out miniGameIndex);
         }
 
-    passingScore = Mathf.RoundToInt(maxScore * 0.6f);
-    bool passed = score >= passingScore;
+        passingScore = Mathf.RoundToInt(maxScore * 0.6f);
+        bool passed = score >= passingScore;
 
         GameResults.Score = score;
         GameResults.Passed = passed;
@@ -194,6 +190,8 @@ public class ValveController : MonoBehaviour, IGameStarter
         DBManager.SaveProgress(disaster, difficulty, miniGameIndex, passed);
 
         SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
+
+        Debug.Log($"[WaterValve] EndGame -> Score: {score}, Passed: {passed}, Difficulty: {difficulty}, Index: {miniGameIndex}, Scene: {currentScene}");
 
         SceneManager.LoadScene("TransitionScene");
     }

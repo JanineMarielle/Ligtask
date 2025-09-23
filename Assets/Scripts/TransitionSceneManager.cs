@@ -12,12 +12,13 @@ public class TransitionSceneManager : MonoBehaviour
     public Button nextButton;
     public Button retryButton;
     public TextMeshProUGUI retryButtonText;
+    public Button mainMenuButton;   // ✅ Always available
 
     [Header("Animation References")]
-    public Image animationImage; // Assign a UI Image to display animation frames
-    public Sprite[] passFrames;   // Fill this in Inspector
-    public Sprite[] failFrames;   // Fill this in Inspector
-    public float frameRate = 0.1f; // Time per frame in seconds
+    public Image animationImage;    // Assign a UI Image to display animation frames
+    public Sprite[] passFrames;     // Fill this in Inspector
+    public Sprite[] failFrames;     // Fill this in Inspector
+    public float frameRate = 0.1f;  // Time per frame in seconds
 
     private string currentDisaster;
     private string currentDifficulty;
@@ -31,6 +32,7 @@ public class TransitionSceneManager : MonoBehaviour
         int score = GameResults.Score;
         bool passed = GameResults.Passed;
 
+        // ✅ Update UI
         scoreText.text = $"Score: {score}";
         resultText.text = passed ? "You Passed!" : "Try Again";
 
@@ -40,6 +42,28 @@ public class TransitionSceneManager : MonoBehaviour
         Debug.Log($"Last mini-game: {SceneTracker.LastMinigameScene}");
         Debug.Log($"Current Disaster: {currentDisaster}, Difficulty: {currentDifficulty}");
 
+        // ✅ If last scene was a quiz → hide Next button
+        if (!string.IsNullOrEmpty(SceneTracker.LastMinigameScene) &&
+            SceneTracker.LastMinigameScene.ToLower().Contains("quiz"))
+        {
+            nextButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            nextButton.gameObject.SetActive(true);
+        }
+
+        // ✅ Main menu button always available
+        mainMenuButton.gameObject.SetActive(true);
+        retryButton.gameObject.SetActive(true);
+
+        // ✅ Play transition music depending on pass/fail
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayTransitionMusic(passed);
+        }
+
+        // ✅ Play pass/fail animation
         StartCoroutine(PlayAnimation(passed ? passFrames : failFrames));
     }
 
@@ -81,5 +105,11 @@ public class TransitionSceneManager : MonoBehaviour
         {
             Debug.LogWarning("No last mini-game recorded! Cannot retry.");
         }
+    }
+
+    // ✅ Main Menu button
+    public void OnMainMenuButton()
+    {
+        SceneManager.LoadScene("DisasterSelection"); // 🔹 replace with your actual main menu scene name
     }
 }

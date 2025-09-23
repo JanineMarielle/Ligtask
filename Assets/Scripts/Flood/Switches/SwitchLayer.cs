@@ -345,9 +345,9 @@ public class SwitchLayer : MonoBehaviour, IGameStarter
             difficulty = "Hard";
         }
 
-    // Passing score is now 60% of max possible
-    maxScore = totalPossible;
-    passingScore = Mathf.RoundToInt(maxScore * 0.6f);
+        // Passing score is now 60% of max possible
+        maxScore = totalPossible;
+        passingScore = Mathf.RoundToInt(maxScore * 0.6f);
 
         GameResults.Score = score;
         GameResults.Passed = score >= passingScore;

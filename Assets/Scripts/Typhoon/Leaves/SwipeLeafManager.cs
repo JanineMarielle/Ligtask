@@ -264,44 +264,31 @@ public class SwipeLeafManager : MonoBehaviour, IGameStarter
         score = Mathf.Clamp(score, 0, maxScore);
 
         string currentScene = SceneManager.GetActiveScene().name;
-        string disaster = "Typhoon"; // default
-        string difficulty = "Easy";  // default
-        int miniGameIndex = 2;       // assign correct index for this mini-game
+        string disaster = "Typhoon";  
+        string difficulty = "Easy";  
+        int miniGameIndex = 5;        
 
         if (currentScene.StartsWith("TyphoonEasy"))
         {
-            disaster = "Typhoon";
             difficulty = "Easy";
         }
         else if (currentScene.StartsWith("TyphoonHard"))
         {
-            disaster = "Typhoon";
             difficulty = "Hard";
         }
 
         bool passed = score >= passingScore;
 
         GameResults.Score = score;
+        GameResults.MaxScore = maxScore;
         GameResults.Passed = passed;
         GameResults.DisasterName = disaster;
         GameResults.MiniGameIndex = miniGameIndex;
         GameResults.Difficulty = difficulty;
 
         DBManager.SaveProgress(disaster, difficulty, miniGameIndex, passed);
-
         SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
 
         SceneManager.LoadScene("TransitionScene");
-    }
-
-    // ---------------- Canvas Bounds Helper ----------------
-    public bool IsOutOfBounds(Vector3 worldPos)
-    {
-        if (activeCanvas == null) return false;
-
-        Vector3 localPos = activeCanvas.InverseTransformPoint(worldPos);
-        Rect rect = activeCanvas.rect;
-
-        return !rect.Contains(localPos);
     }
 }

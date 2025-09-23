@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: AvoidDebris
   m_EditorClassIdentifier: 
   lines:
-  - "The storm has finally passed, and the authorities just announced it\u2019s safe
-    to go home. The rain and wind have stopped, and things are calmer now."
-  - "It looks like it\u2019s safe to step outside now, but the danger isn\u2019t
-    really over yet. Look around, there are fallen trees, broken buildings, and power
-    lines everywhere."
+  - "The authorities just announced it\u2019s safe to go home, but the danger isn\u2019t
+    really over yet. "
+  - Look around, there are fallen trees, broken buildings, and power lines everywhere.
   - 'We need to be careful and stay away from anything that could hurt us. '
+  - Swipe the character from side to side and avoid incoming debris

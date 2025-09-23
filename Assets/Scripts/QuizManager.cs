@@ -128,48 +128,29 @@ public class QuizManager : MonoBehaviour, IGameStarter
 
     private void SaveAndTransition()
     {
+        // Get current context from SceneTracker
+        string disaster = SceneTracker.CurrentDisaster ?? "Unknown";
+        string difficulty = SceneTracker.CurrentDifficulty ?? "Easy"; 
         string currentScene = SceneManager.GetActiveScene().name;
-        string disaster = "Quiz";
-        string difficulty = "Easy";
-        int miniGameIndex = 1;
 
-        if (currentScene.StartsWith("TyphoonEasy"))
-        {
-            disaster = "Typhoon";
-            difficulty = "Easy";
-            string numPart = currentScene.Replace("TyphoonEasy", "");
-            int.TryParse(numPart, out miniGameIndex);
-        }
-        else if (currentScene.StartsWith("TyphoonHard"))
-        {
-            disaster = "Typhoon";
-            difficulty = "Hard";
-            string numPart = currentScene.Replace("TyphoonHard", "");
-            int.TryParse(numPart, out miniGameIndex);
-        }
-        else if (currentScene.StartsWith("TyphoonQuiz"))
-        {
-            disaster = "Typhoon";
-            difficulty = "Quiz";
-            string numPart = currentScene.Replace("TyphoonQuiz", "");
-            int.TryParse(numPart, out miniGameIndex);
-        }
-
-    int passingScore = Mathf.RoundToInt(maxScore * 0.6f);
+        // Passing score: 70% for quizzes
+        int passingScore = Mathf.RoundToInt(maxScore * 0.7f);
         bool passed = score >= passingScore;
 
-        // Save temporary results
+        // Save results to GameResults
         GameResults.Score = score;
         GameResults.Passed = passed;
         GameResults.DisasterName = disaster;
-        GameResults.MiniGameIndex = miniGameIndex;
         GameResults.Difficulty = difficulty;
+        GameResults.MiniGameIndex = -1; // quiz is terminal, no index
 
-        // Save to DB (new unified method)
-        DBManager.SaveProgress(disaster, difficulty, miniGameIndex, passed);
+        // Save to DB (force difficulty Easy for consistency in menu if needed)
+        DBManager.SaveProgress(disaster, "Easy", -1, passed);
 
+        // Update SceneTracker with last scene = current quiz
         SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
 
+        // Transition
         SceneManager.LoadScene("TransitionScene");
     }
 

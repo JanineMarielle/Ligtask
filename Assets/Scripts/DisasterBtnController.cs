@@ -7,7 +7,6 @@ public class DisasterBtnController : MonoBehaviour
     [Header("UI References")]
     public GameObject disasterButton;        
     public GameObject difficultyButtons;     
-    public GameObject lockedOverlay;         
 
     [Header("Disaster Info")]
     public string disasterName;             
@@ -46,52 +45,30 @@ public class DisasterBtnController : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log($"[START] Initializing disaster: {disasterName}");
-
         if (useTestProgress)
         {
             progress = new DisasterProgress
             {
-                IsUnlocked = testIsUnlocked,
-                HardUnlocked = testHardUnlocked
+                IsUnlocked = true,  // Easy always unlocked
+                HardUnlocked = testHardUnlocked,
+                QuizCompleted = testIsUnlocked
             };
-            Debug.Log($"[TEST MODE] Created progress: Unlocked={progress.IsUnlocked}, Hard={progress.HardUnlocked}");
         }
         else
         {
             progress = DBManager.GetDisasterProgress(disasterName);
-            Debug.Log($"[DB MODE] Loaded progress from DB: Unlocked={progress.IsUnlocked}, Hard={progress.HardUnlocked}");
-        }
+            if (progress == null)
+            {
+                Debug.LogError($"[ERROR] No DB entry found for {disasterName}");
+                return;
+            }
 
-        if (progress == null)
-        {
-            Debug.LogError($"[ERROR] No DB entry found for {disasterName}");
-            return;
-        }
-
-        if (disasterName.Trim().ToLower() == "typhoon")
-        {
-            progress.IsUnlocked = true;
-            progress.HardUnlocked = true;
-            Debug.Log("[TYHOON OVERRIDE] Forcing unlocked state");
-        }
-
-        if (lockedOverlay != null)
-        {
-            bool shouldShow = !progress.IsUnlocked;
-            lockedOverlay.SetActive(shouldShow);
-            Debug.Log($"[OVERLAY] Setting active={shouldShow} for {disasterName}");
-        }
-        else
-        {
-            Debug.LogWarning($"[OVERLAY] No overlay object assigned for {disasterName}");
+            // Easy is always unlocked
+            progress.IsUnlocked = true; 
         }
 
         if (disasterBtnComponent != null)
-        {
             disasterBtnComponent.interactable = progress.IsUnlocked;
-            Debug.Log($"[BUTTON] Interactable={disasterBtnComponent.interactable} for {disasterName}");
-        }
 
         ShowDisasterButton();
     }
@@ -106,11 +83,7 @@ public class DisasterBtnController : MonoBehaviour
             return;
         }
 
-        if (!progress.IsUnlocked)
-        {
-            Debug.Log($"[LOCKED] Disaster '{disasterName}' is locked");
-            return;
-        }
+        // Easy always unlocked, no overlay check needed
 
         if (progress.HardUnlocked)
         {
@@ -131,7 +104,6 @@ public class DisasterBtnController : MonoBehaviour
         Debug.Log($"[LOAD] Loading scene: {disasterName}Easy");
 
         SceneTracker.SetCurrentDisasterDifficulty(disasterName, "Easy");
-
         SceneManager.LoadScene(disasterName + "Easy");
     }
 
@@ -140,7 +112,6 @@ public class DisasterBtnController : MonoBehaviour
         Debug.Log($"[LOAD] Loading scene: {disasterName}Hard");
 
         SceneTracker.SetCurrentDisasterDifficulty(disasterName, "Hard");
-
         SceneManager.LoadScene(disasterName + "Hard");
     }
 

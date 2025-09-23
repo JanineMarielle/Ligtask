@@ -13,16 +13,9 @@ MonoBehaviour:
   m_Name: GoBagGame
   m_EditorClassIdentifier: 
   lines:
-  - A typhoon is a powerful tropical cyclone that can bring extreme winds, heavy
-    rain, storm surges, and flooding.
-  - In the Philippines, typhoon season usually lasts from June to November, but storms
-    can happen anytime.
-  - Typhoons can cause damage to homes, power outages, and life-threatening conditions.
-    Preparing before the storm, staying safe during, and avoiding hazards after are
-    essential for survival.
   - "The news just said a strong typhoon is heading our way. We need to pack our
     Go Bag right now so we\u2019re ready if we have to evacuate. "
   - "Items will slide onto the screen. If the item is necessary, slide it down into
-    your Go Bag. If not, slide it up to discard it. \r\n"
+    your Go Bag. If not, slide it up to discard it. \r"
   - Time limits get shorter at higher difficulty and some rounds may have a mix of
     necessary and unnecessary items, choose quickly!

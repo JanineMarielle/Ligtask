@@ -12,10 +12,20 @@ public static class SceneTracker
 
     private static Dictionary<string, string[]> miniGameSequences = new Dictionary<string, string[]>()
     {
-        { "Typhoon_Easy", new string[] { "TyphoonEasy", "Evacuate", "Windows", "AvoidDebris", "LeavesGame", "TyphoonQuiz" } },
-        { "Typhoon_Hard", new string[] { "TyphoonHard", "EvacuateHard", "WindowsHard", "AvoidDebrisHard", "LeavesHard" } },
-        { "Flood_Easy", new string[] { "FloodEasy", "MoveItems", "WaterValve", "CatchSupply" } },
-        { "Flood_Hard", new string[] { "FloodHard", "MoveItemsHard", "WaterValveHard", "CatchSupplyHard" } },
+        { "Typhoon_Easy", new string[] { "TyphoonEasy", "TyphoonEasy2", "TyphoonEasy3", "TyphoonEasy4", "TyphoonQuiz" } },
+        { "Typhoon_Hard", new string[] { "TyphoonHard", "TyphoonHard2", "TyphoonHard3", "TyphoonHard4", "TyphoonQuiz" } },
+
+        { "Flood_Easy", new string[] { "FloodEasy", "FloodEasy2", "FloodEasy3", "FloodEasy5", "FloodQuiz" } },
+        { "Flood_Hard", new string[] { "FloodHard", "FloodHard2", "FloodHard3", "FloodHard5", "FloodQuiz" } },
+
+        { "Earthquake_Easy", new string[] { "EarthquakeEasy", "EarthquakeEasy2", "EarthquakeEasy3", "EarthquakeQuiz" } },
+        { "Earthquake_Hard", new string[] { "EarthquakeHard", "EarthquakeHard2", "EarthquakeHard3", "EarthquakeQuiz" } },
+
+        { "Landslide_Easy", new string[] { "LandslideEasy", "LandslideEasy2", "LandslideEasy3", "LandslideQuiz" } },
+        { "Landslide_Hard", new string[] { "LandslideHard", "LandslideHard2", "LandslideHard3", "LandslideQuiz" } },
+
+        { "Volcano_Easy", new string[] { "VolcanoEasy", "VolcanoEasy2", "VolcanoEasy3", "VolcanoQuiz" } },
+        { "Volcano_Hard", new string[] { "VolcanoHard", "VolcanoHard2", "VolcanoHard3", "VolcanoQuiz" } },
     };
 
     private static string GetKey(string disaster, string difficulty)

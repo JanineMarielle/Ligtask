@@ -378,12 +378,12 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
     {
         gameRunning = false;
 
-    int maxScore = spawnedNecessaryItems.Count * 20;
-    int passingScore = Mathf.RoundToInt(maxScore * 0.6f);
+        int maxScore = spawnedNecessaryItems.Count * 20;
+        int passingScore = Mathf.RoundToInt(maxScore * 0.6f);
 
         GameResults.Score = score;
         GameResults.Passed = score >= passingScore;
-        GameResults.DisasterName = "Flood";
+        GameResults.DisasterName = "Earthquake";
         GameResults.MiniGameIndex = 1;
         GameResults.Difficulty = "Easy";
 

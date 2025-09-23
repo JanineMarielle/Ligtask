@@ -251,39 +251,43 @@ public class ProgressGround : MonoBehaviour, IGameStarter
     }
 
     private void EndGame()
+{
+    int maxScore = totalInputs * 10; 
+    int score = Mathf.Clamp(correctInputs * 10, 0, maxScore);  
+    int passingScore = Mathf.RoundToInt(maxScore * 0.6f); 
+    bool passed = score >= passingScore;
+
+    string currentScene = SceneManager.GetActiveScene().name;
+    string disaster = "Typhoon"; 
+    string difficulty = "Easy";   
+    int miniGameIndex = 2;        
+
+    if (currentScene.StartsWith("TyphoonEasy"))
     {
-    bool passed = (correctInputs >= totalInputs * 0.6f); // 60% threshold
-        int score = correctInputs * 10; // e.g., 10 points per correct arrow
-
-        string currentScene = SceneManager.GetActiveScene().name;
-        string disaster = "Typhoon";
-        string difficulty = "Easy";
-        int miniGameIndex = 1;
-
-        if (currentScene.ToLower().Contains("hard"))
-            difficulty = "Hard";
-
-        string digits = "";
-        foreach (char c in currentScene)
-        {
-            if (char.IsDigit(c)) digits += c;
-        }
-        if (!string.IsNullOrEmpty(digits)) int.TryParse(digits, out miniGameIndex);
-
-        // Assign numeric score to GameResults
-        GameResults.Score = score;          // ✅ now has value
-        GameResults.Passed = passed;
-        GameResults.DisasterName = disaster;
-        GameResults.MiniGameIndex = miniGameIndex;
-        GameResults.Difficulty = difficulty;
-
-        // DB still saves pass/fail
-        DBManager.SaveProgress(disaster, difficulty, miniGameIndex, passed);
-
-        SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
-        SceneManager.LoadScene("TransitionScene");
-
+        difficulty = "Easy";
+        string numberPart = currentScene.Replace("TyphoonEasy", "");
+        int.TryParse(numberPart, out miniGameIndex);
     }
+    else if (currentScene.StartsWith("TyphoonHard"))
+    {
+        difficulty = "Hard";
+        string numberPart = currentScene.Replace("TyphoonHard", "");
+        int.TryParse(numberPart, out miniGameIndex);
+    }
+
+    GameResults.Score = score;
+    GameResults.MaxScore = maxScore;
+    GameResults.Passed = passed;
+    GameResults.DisasterName = disaster;
+    GameResults.MiniGameIndex = miniGameIndex;
+    GameResults.Difficulty = difficulty;
+
+    DBManager.SaveProgress(disaster, difficulty, miniGameIndex, passed);
+
+    SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
+
+    SceneManager.LoadScene("TransitionScene");
+}
 
     Sprite GetArrowSprite(int arrow)
     {

@@ -290,35 +290,27 @@ public class ItemHandler : MonoBehaviour, IGameStarter
             if (draggable != null) draggable.enabled = false;
         }
 
-            int maxScore = spawnedNecessaryItems.Count * 20;
-            int passingScore = Mathf.RoundToInt(maxScore * 0.6f);
+        int maxScore = spawnedNecessaryItems.Count * 20;
+        int passingScore = Mathf.RoundToInt(maxScore * 0.6f);
 
         string currentScene = SceneManager.GetActiveScene().name;
+
         string disaster = "Flood";
-        string difficulty = "Easy";
-
-        if (currentScene.Equals("MoveItemsHard"))
-            difficulty = "Hard";
-        else if (currentScene.Equals("MoveItems"))
-            difficulty = "Easy";
-
-        if (currentScene.StartsWith("MoveItems"))
-            disaster = "Flood";
+        string difficulty = currentScene.Contains("Hard") ? "Hard" : "Easy";
+        int miniGameIndex = 2;
 
         GameResults.Score = score;
         GameResults.Passed = score >= passingScore;
         GameResults.DisasterName = disaster;
-        GameResults.MiniGameIndex = 1; 
+        GameResults.MiniGameIndex = miniGameIndex;
         GameResults.Difficulty = difficulty;
 
-        DBManager.SaveProgress(disaster, difficulty, GameResults.MiniGameIndex, GameResults.Passed);
-
+        DBManager.SaveProgress(disaster, difficulty, miniGameIndex, GameResults.Passed);
         SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
 
         Debug.Log($"[ItemHandler] Game ended. Score: {score}, Passed: {GameResults.Passed}, Difficulty: {difficulty}, Scene: {currentScene}");
 
         SceneManager.LoadScene("TransitionScene");
-
     }
 
     private void OnDestroy()

@@ -14,7 +14,8 @@ public class DBManager : MonoBehaviour
     {
         if (initialized) return;
 
-        dbPath = Path.Combine(Application.persistentDataPath, "ligtask.db");
+        //dbPath = Path.Combine(Application.persistentDataPath, "ligtask.db");
+        dbPath = Path.Combine(Application.persistentDataPath, "test.db");
 
         // Open or create DB
         db = new SQLiteConnection(dbPath);
@@ -40,7 +41,7 @@ public class DBManager : MonoBehaviour
 
     private static void SeedInitialData()
     {
-        db.Insert(new DisasterProgress { DisasterName = "Typhoon", IsUnlocked = true });
+        db.Insert(new DisasterProgress { DisasterName = "Typhoon" });
         db.Insert(new DisasterProgress { DisasterName = "Earthquake" });
         db.Insert(new DisasterProgress { DisasterName = "Flood" });
         db.Insert(new DisasterProgress { DisasterName = "Landslide" });
@@ -56,63 +57,58 @@ public class DBManager : MonoBehaviour
         return db.Table<DisasterProgress>().FirstOrDefault(x => x.DisasterName == disasterName);
     }
 
-    public static void SaveProgress(string disasterName, string difficulty, int miniGameIndex, int score)
+    public static void SaveProgress(string disasterName, string difficulty, int miniGameIndex, bool passed)
+{
+    if (db == null) Init();
+
+    // Handle minigame-level progress
+    var existing = db.Table<MiniGameProgress>()
+        .FirstOrDefault(x => x.DisasterName == disasterName
+                          && x.Difficulty == difficulty
+                          && x.MiniGameIndex == miniGameIndex);
+
+    if (existing != null)
     {
-        if (db == null) Init();
-
-        bool passed = false;
-
-        // 🔹 Apply score rules
-        if (difficulty == "Easy" && score >= 60) passed = true;
-        else if (difficulty == "Hard" && score >= 60) passed = true;
-        else if (difficulty == "Quiz" && score >= 70) passed = true;
-
-        // Handle minigame-level progress
-        var existing = db.Table<MiniGameProgress>()
-            .FirstOrDefault(x => x.DisasterName == disasterName
-                            && x.Difficulty == difficulty
-                            && x.MiniGameIndex == miniGameIndex);
-
-        if (existing != null)
+        if (!existing.Passed && passed)
         {
-            if (!existing.Passed && passed)
-            {
-                existing.Passed = true;
-                db.Update(existing);
-            }
+            existing.Passed = true;
+            db.Update(existing);
         }
-        else
-        {
-            db.Insert(new MiniGameProgress
-            {
-                DisasterName = disasterName,
-                Difficulty = difficulty,
-                MiniGameIndex = miniGameIndex,
-                Passed = passed
-            });
-        }
-
-        // Handle disaster-level progress
-        var progress = GetDisasterProgress(disasterName);
-        if (progress == null) return;
-
-        if (difficulty == "Easy" && passed)
-        {
-            progress.EasyCompleted = true;
-        }
-        else if (difficulty == "Hard" && passed)
-        {
-            progress.HardCompleted = true;
-        }
-        else if (difficulty == "Quiz" && passed)
-        {
-            progress.QuizCompleted = true;
-            progress.HardUnlocked = true; // 🔑 Unlock Hard only via Quiz
-            UnlockNextDisaster(disasterName);
-        }
-
-        db.Update(progress);
     }
+    else
+    {
+        db.Insert(new MiniGameProgress
+        {
+            DisasterName = disasterName,
+            Difficulty = difficulty,
+            MiniGameIndex = miniGameIndex,
+            Passed = passed
+        });
+    }
+
+    // Handle disaster-level unlock logic
+    var progress = GetDisasterProgress(disasterName);
+    if (progress == null) return;
+
+    if (difficulty == "Easy" && passed)
+    {
+        progress.EasyCompleted = true;
+        // Hard unlocked only after Quiz (70% passing)
+        // Do not unlock Hard here
+    }
+    else if (difficulty == "Hard" && passed)
+    {
+        progress.HardCompleted = true;
+    }
+    else if (difficulty == "Quiz" && passed)
+    {
+        progress.QuizCompleted = true;
+        progress.HardUnlocked = true; // unlock Hard only via Quiz
+        UnlockNextDisaster(disasterName);
+    }
+
+    db.Update(progress);
+}
 
     private static void UnlockNextDisaster(string currentDisaster)
     {

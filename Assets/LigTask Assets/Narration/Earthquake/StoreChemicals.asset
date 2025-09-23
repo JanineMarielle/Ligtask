@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abb433c6fec6b224d8b14629ae9222a7, type: 3}
+  m_Name: StoreChemicals
+  m_EditorClassIdentifier: 
+  lines:
+  - Flammable and toxic items like cleaning fluids or gas cans can spill or ignite
+    during an earthquake, creating even more danger.
+  - To stay safe, these items must be stored in locked cabinets or placed on sturdy
+    shelves.
+  - Drag the cleaning liquids, gas cans, and other chemicals into the basket then
+    move them to a proper cabinet for safety.

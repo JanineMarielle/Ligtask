@@ -213,26 +213,23 @@ public class AvoidObstacleManager : MonoBehaviour, IGameStarter
     private void SaveAndTransition()
     {
         string currentScene = SceneManager.GetActiveScene().name;
-        string disaster = "Typhoon";
-        string difficulty = "Easy";
+        string disaster = "Typhoon";  
+        string difficulty = "Easy";   
         int miniGameIndex = 1;
 
         if (currentScene.StartsWith("TyphoonEasy"))
         {
-            disaster = "Typhoon";
             difficulty = "Easy";
             string numPart = currentScene.Replace("TyphoonEasy", "");
             int.TryParse(numPart, out miniGameIndex);
         }
         else if (currentScene.StartsWith("TyphoonHard"))
         {
-            disaster = "Typhoon";
             difficulty = "Hard";
             string numPart = currentScene.Replace("TyphoonHard", "");
             int.TryParse(numPart, out miniGameIndex);
         }
 
-        // 🔹 Keep scores in memory for TransitionScene
         GameResults.Score = score;
         GameResults.MaxScore = maxScore;
         GameResults.Passed = score >= passingScore;
@@ -240,10 +237,10 @@ public class AvoidObstacleManager : MonoBehaviour, IGameStarter
         GameResults.MiniGameIndex = miniGameIndex;
         GameResults.Difficulty = difficulty;
 
-        // 🔹 Store only pass/fail in DB
         DBManager.SaveProgress(disaster, difficulty, miniGameIndex, GameResults.Passed);
-
         SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
+
         SceneManager.LoadScene("TransitionScene");
     }
+
 }

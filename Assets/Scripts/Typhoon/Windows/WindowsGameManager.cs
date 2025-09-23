@@ -162,39 +162,35 @@ public class WindowsGameManager : MonoBehaviour, IGameStarter
         score = Mathf.Clamp(score, 0, maxScore);
 
         string currentScene = SceneManager.GetActiveScene().name;
-        string disaster = "Typhoon";
-        string difficulty = "Easy";
-        int miniGameIndex = 1;
+        string disaster = "Typhoon";   
+        string difficulty = "Easy"; 
+        int miniGameIndex = 3;        
 
-        // Determine difficulty based on scene name
-        if (currentScene.Contains("Hard"))
-            difficulty = "Hard";
-
-        if (currentScene.StartsWith("TyphoonEasy") || currentScene.StartsWith("TyphoonHard"))
+        if (currentScene.StartsWith("TyphoonEasy"))
         {
-            string numberPart = new string(
-                currentScene.ToCharArray(
-                    currentScene.IndexOf(difficulty) + difficulty.Length,
-                    currentScene.Length - (currentScene.IndexOf(difficulty) + difficulty.Length)
-                )
-            );
+            difficulty = "Easy";
+            string numberPart = currentScene.Replace("TyphoonEasy", "");
+            int.TryParse(numberPart, out miniGameIndex);
+        }
+        else if (currentScene.StartsWith("TyphoonHard"))
+        {
+            difficulty = "Hard";
+            string numberPart = currentScene.Replace("TyphoonHard", "");
             int.TryParse(numberPart, out miniGameIndex);
         }
 
         bool passed = score >= passingScore;
 
         GameResults.Score = score;
+        GameResults.MaxScore = maxScore;
         GameResults.Passed = passed;
         GameResults.DisasterName = disaster;
         GameResults.MiniGameIndex = miniGameIndex;
         GameResults.Difficulty = difficulty;
 
         DBManager.SaveProgress(disaster, difficulty, miniGameIndex, passed);
-
         SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
 
         SceneManager.LoadScene("TransitionScene");
-
     }
-
 }

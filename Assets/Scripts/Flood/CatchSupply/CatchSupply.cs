@@ -250,32 +250,22 @@ public class CatchSupply : MonoBehaviour, IGameStarter
         gameEnded = true;
         gameActive = false;
 
-        // ✅ Clamp score to prevent negatives
         score = Mathf.Clamp(score, 0, int.MaxValue);
 
-    // ✅ Define a passing score: 60% of the maximum possible
-    int maxPossibleScore = necessarySpawned * pointsPerCatch;
-    int threshold = Mathf.RoundToInt(maxPossibleScore * 0.6f); // 60%
+        // ✅ Define a passing score: 60% of the maximum possible
+        int maxPossibleScore = necessarySpawned * pointsPerCatch;
+        int threshold = Mathf.RoundToInt(maxPossibleScore * 0.6f); // 60%
 
         bool passed = score >= threshold;
 
         Debug.Log($"[CatchSupply] EndGame: necessarySpawned={necessarySpawned}, caught={necessaryCaught}, missed={necessaryMissed}, " +
-                  $"score={score}, maxPossibleScore={maxPossibleScore}, threshold={threshold}, passed={passed}");
+                $"score={score}, maxPossibleScore={maxPossibleScore}, threshold={threshold}, passed={passed}");
 
         string currentScene = SceneManager.GetActiveScene().name;
+
         string disaster = "Flood";
-        string difficulty = "Easy";
-        int miniGameIndex = 2; // Assuming CatchSupply is MiniGame 2 for Flood
-
-        // Difficulty check
-        if (currentScene.Equals("CatchSupplyHard"))
-            difficulty = "Hard";
-        else if (currentScene.Equals("CatchSupply"))
-            difficulty = "Easy";
-
-        // Disaster check (always Flood for this mini-game)
-        if (currentScene.StartsWith("CatchSupply"))
-            disaster = "Flood";
+        string difficulty = currentScene.Contains("Hard") ? "Hard" : "Easy";
+        int miniGameIndex = 5;
 
         // Save results
         GameResults.Score = score;
@@ -288,7 +278,6 @@ public class CatchSupply : MonoBehaviour, IGameStarter
         SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
 
         Debug.Log($"[CatchSupply] Game ended. Score: {score}, Passed: {passed}, Difficulty: {difficulty}, Scene: {currentScene}");
-
 
         SceneManager.LoadScene("TransitionScene");
     }
