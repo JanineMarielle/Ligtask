@@ -56,7 +56,7 @@ public class AudioManager : MonoBehaviour
         AudioClip clipToPlay = null;
 
         // Main menu / non-game scenes
-        if (sceneName == "MainMenu" || sceneName == "Settings" || sceneName == "Map")
+        if (sceneName == "MainMenu" || sceneName == "DisasterSelection")
             clipToPlay = mainMusic;
 
         // Quizzes
