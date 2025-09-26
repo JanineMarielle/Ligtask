@@ -112,22 +112,25 @@ MonoBehaviour:
     - 'Throw it away  '
     - 'Sell it to others '
     correctAnswerIndex: 2
-  - questionText: After a flood, why do health workers spray fogging chemicals in
-      communities?
+  - questionText: 'Why should you clean your home thoroughly after a flood?
+
+'
     options:
-    - 'To clean muddy streets '
-    - To kill mosquitoes and prevent dengue or malaria
-    - ' To make the air smell better '
-    - 'To dry the roads faster '
+    - To look neat
+    - 'To remove mud, germs, and possible mold  '
+    - 'To impress visitors '
+    - ' To prepare for painting'
     correctAnswerIndex: 1
-  - questionText: If fogging is happening in your area, what should you and your
-      family do?
+  - questionText: 'Why is it important to listen to official announcements after
+      a flood?
+
+'
     options:
-    - Follow the fogging truck outside
-    - Spray your own insecticides too
-    - Stay indoors and close doors/windows
-    - Play near the fogging machine
-    correctAnswerIndex: 2
+    - 'To hear neighborhood gossip '
+    - "To know when it\u2019s safe to return and get updates on relief"
+    - 'To keep the radio on for entertainment '
+    - 'To practice listening skills '
+    correctAnswerIndex: 1
   - questionText: 'If you see stagnant water left after a flood, why should you clear
       it?
 
