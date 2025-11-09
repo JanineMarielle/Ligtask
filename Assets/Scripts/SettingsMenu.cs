@@ -4,12 +4,13 @@ using UnityEngine.UI;
 public class SettingsMenu : MonoBehaviour
 {
     [Header("UI References")]
-    public GameObject settingsPanel; // The overlay panel
-    public Button settingsButton;    // The gear/settings button
-    public Button closeButton;       // Optional close button
+    public GameObject settingsPanel; 
+    public Button settingsButton;    
+    public Button closeButton;       
 
     public Slider musicSlider;
-    //public Slider sfxSlider;
+    public Slider narrationSlider;
+    public Slider sfxSlider; // ✅ new slider for sound effects
 
     [Header("Blur Background")]
     public GameObject blurBackground;
@@ -19,7 +20,6 @@ public class SettingsMenu : MonoBehaviour
 
     void Awake()
     {
-        // Apply padding to settings button if assigned
         if (settingsButton != null)
         {
             RectTransform rect = settingsButton.GetComponent<RectTransform>();
@@ -32,33 +32,25 @@ public class SettingsMenu : MonoBehaviour
 
     void Start()
     {
-        // Load saved volume values
+        // ✅ Load saved volume values
         musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
-        //sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
+        narrationSlider.value = PlayerPrefs.GetFloat("NarrationVolume", 1f);
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
 
-        // Add slider listeners for live updates
+        // ✅ Add slider listeners
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
-        //sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+        narrationSlider.onValueChanged.AddListener(SetNarrationVolume);
+        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
 
-        // Add button listener to open settings panel (overlay)
         if (settingsButton != null)
-            settingsButton.onClick.AddListener(() =>
-            {
-                OpenSettings();
-            });
+            settingsButton.onClick.AddListener(OpenSettings);
 
-        // Add button listener to close settings panel
         if (closeButton != null)
-            closeButton.onClick.AddListener(() =>
-            {
-                CloseSettings();
-            });
+            closeButton.onClick.AddListener(CloseSettings);
 
-        // Ensure settings panel is hidden at start
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
 
-        // Ensure blur background is hidden at start
         if (blurBackground != null)
             blurBackground.SetActive(false);
     }
@@ -85,11 +77,23 @@ public class SettingsMenu : MonoBehaviour
     {
         if (AudioManager.Instance != null)
             AudioManager.Instance.SetMusicVolume(value);
+
+        PlayerPrefs.SetFloat("MusicVolume", value);
     }
 
-    public void SetSFXVolume(float value)
+    public void SetNarrationVolume(float value)
+    {
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetNarrationVolume(value);
+
+        PlayerPrefs.SetFloat("NarrationVolume", value);
+    }
+
+    public void SetSFXVolume(float value) // ✅ new function
     {
         if (AudioManager.Instance != null)
             AudioManager.Instance.SetSFXVolume(value);
+
+        PlayerPrefs.SetFloat("SFXVolume", value);
     }
 }

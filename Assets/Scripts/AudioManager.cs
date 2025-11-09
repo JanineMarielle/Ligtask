@@ -8,6 +8,7 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Sources")]
     public AudioSource musicSource;
     public AudioSource sfxSource;
+    public AudioSource narrationSource; // ✅ New for voice/narration
 
     [Header("Music Clips")]
     public AudioClip mainMusic;
@@ -28,6 +29,8 @@ public class AudioManager : MonoBehaviour
             // Load saved volumes (default = 1f)
             musicSource.volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
             sfxSource.volume = PlayerPrefs.GetFloat("SFXVolume", 1f);
+            if (narrationSource != null)
+                narrationSource.volume = PlayerPrefs.GetFloat("NarrationVolume", 1f); // ✅ load narration volume
         }
         else
         {
@@ -48,6 +51,7 @@ public class AudioManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         currentScene = scene.name;
+        StopNarration();
         PlayMusicForScene(currentScene);
     }
 
@@ -55,19 +59,12 @@ public class AudioManager : MonoBehaviour
     {
         AudioClip clipToPlay = null;
 
-        // Main menu / non-game scenes
         if (sceneName == "MainMenu" || sceneName == "DisasterSelection")
             clipToPlay = mainMusic;
-
-        // Quizzes
         else if (sceneName.EndsWith("Quiz"))
             clipToPlay = quizMusic;
-
-        // Transition scenes (you call PlayTransitionMusic manually from your script)
         else if (sceneName == "Transition")
             return;
-
-        // Game levels
         else
             clipToPlay = gameMusic;
 
@@ -85,10 +82,26 @@ public class AudioManager : MonoBehaviour
         musicSource.Play();
     }
 
-    // Play one-shot SFX
+    // === Sound Effects ===
     public void PlaySFX(AudioClip clip)
     {
         sfxSource.PlayOneShot(clip);
+    }
+
+    // === Narration ===
+    public void PlayNarration(AudioClip clip)
+    {
+        if (narrationSource == null || clip == null) return;
+
+        narrationSource.Stop(); // stop previous narration
+        narrationSource.clip = clip;
+        narrationSource.Play();
+    }
+
+    public void StopNarration()
+    {
+        if (narrationSource != null)
+            narrationSource.Stop();
     }
 
     // === Volume Controls ===
@@ -102,5 +115,13 @@ public class AudioManager : MonoBehaviour
     {
         sfxSource.volume = value;
         PlayerPrefs.SetFloat("SFXVolume", value);
+    }
+
+    public void SetNarrationVolume(float value)
+    {
+        if (narrationSource != null)
+            narrationSource.volume = value;
+
+        PlayerPrefs.SetFloat("NarrationVolume", value);
     }
 }

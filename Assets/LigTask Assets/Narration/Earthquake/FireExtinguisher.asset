@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abb433c6fec6b224d8b14629ae9222a7, type: 3}
+  m_Name: FireExtinguisher
+  m_EditorClassIdentifier: 
+  lines:
+  - A fire has broken out! Stay calm and get ready to use the fire extinguisher.
+  - "To put out the flames safely, remember the word P.A.S.S. It\u2019s the key to
+    using an extinguisher correctly"
+  - 'P means Pull the pin to unlock it.
+
+    A means Aim the nozzle at the base of
+    the fire.'
+  - 'P means Pull the pin to unlock it.
+
+    A means Aim the nozzle at the base of
+    the fire.'
+  - 'S means Squeeze the handle to release the foam.
+
+    And the last S means Sweep
+    side to side until the fire is gone.'
+  - Be quick but careful! Make sure all flames are out before time runs out!
+  voiceClips: []

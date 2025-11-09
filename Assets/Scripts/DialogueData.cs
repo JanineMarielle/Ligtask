@@ -4,5 +4,8 @@ using UnityEngine;
 public class DialogueData : ScriptableObject
 {
     [TextArea(3, 5)]
-    public string[] lines; // Each line of dialogue/narration
+    public string[] lines;
+
+    [Header("Optional Voice Clips")]
+    public AudioClip[] voiceClips; 
 }

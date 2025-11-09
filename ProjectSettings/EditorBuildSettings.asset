@@ -81,14 +81,29 @@ EditorBuildSettings:
     path: Assets/Scenes/Earthquake_Easy/EarthquakeEasy.unity
     guid: d023d29c0941a6d4dabb9a2d409fd26b
   - enabled: 1
-    path: Assets/Scenes/Earthquake_Easy/EarthquakeEasy2.unity
+    path: Assets/Scenes/Earthquake_Easy/HammerGame.unity
     guid: 621637d5453341f49afada52786d0c7c
   - enabled: 1
-    path: Assets/Scenes/Earthquake_Easy/DuckCover.unity
+    path: Assets/Scenes/Earthquake_Easy/EarthquakeEasy3.unity
     guid: f83f9520489dfb447843f1c8b84c0b41
   - enabled: 1
-    path: Assets/Scenes/Earthquake_Hard/EarthquakeHard2.unity
+    path: Assets/Scenes/Earthquake_Easy/EarthquakeEasy4.unity
+    guid: 92e9322a567c0794d845fe13af9ede36
+  - enabled: 1
+    path: Assets/Scenes/Earthquake_Easy/EarthquakeEasy5.unity
+    guid: b83efa95fcfebd84f863edd1db19ee22
+  - enabled: 1
+    path: Assets/Scenes/Earthquake_Hard/HammerGameH.unity
     guid: 0b71987ee2769d349b51e39df1a05c8d
+  - enabled: 1
+    path: Assets/Scenes/Earthquake_Hard/EarthquakeHard4.unity
+    guid: 733b5516e2392a546b5c114191b15cb5
+  - enabled: 1
+    path: Assets/Scenes/Earthquake_Hard/EarthquakeHard5.unity
+    guid: 20a74a20749883c4b93f790c64098019
+  - enabled: 1
+    path: Assets/Scenes/Landslide_Easy/LandslideEasy.unity
+    guid: a792987f48a43d84f9bf0b71f54c2914
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 061e291051c91b84f9bfe04ab1298497, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 6f38b93dbee2f1d46b34df302425afd6, type: 2}

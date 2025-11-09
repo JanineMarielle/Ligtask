@@ -265,7 +265,7 @@ public class CatchSupply : MonoBehaviour, IGameStarter
 
         string disaster = "Flood";
         string difficulty = currentScene.Contains("Hard") ? "Hard" : "Easy";
-        int miniGameIndex = 5;
+        int miniGameIndex = 4;
 
         // Save results
         GameResults.Score = score;

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Quiz
   m_EditorClassIdentifier: 
   lines:
-  - Are you ready for your first quiz?
+  - Are you ready for your quiz?
   - Reach a passing score of 60% to be able to unlock Typhoon Hard mode!
   - Let's go try your luck!
+  voiceClips: []

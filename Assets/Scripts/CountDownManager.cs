@@ -11,14 +11,15 @@ public class CountDownManager : MonoBehaviour
     [Header("Countdown Settings")]
     public int countdownTime = 3;
 
+    [Header("Audio Settings")]
+    public AudioSource countdownAudio; // assign in Inspector
+
     private Coroutine countdownCoroutine;
     private bool countdownActive = false;
     private bool countdownFinished = false;
-
-    // --- PAUSE FLAG ---
     private bool isPaused = false; 
 
-    private IGameStarter gameStarter; // dynamic reference
+    private IGameStarter gameStarter;
 
     void Awake()
     {
@@ -26,7 +27,6 @@ public class CountDownManager : MonoBehaviour
               .OfType<IGameStarter>()
               .FirstOrDefault();
 
-        // make sure raycast is off initially
         if (countdownText != null)
             countdownText.raycastTarget = false;
     }
@@ -51,6 +51,13 @@ public class CountDownManager : MonoBehaviour
         if (countdownActive || countdownFinished)
             return;
 
+        // ✅ Set volume based on saved SFX setting
+        if (countdownAudio != null)
+        {
+            countdownAudio.volume = PlayerPrefs.GetFloat("SFXVolume", 1f);
+            countdownAudio.Play(); // play your single countdown clip
+        }
+
         countdownCoroutine = StartCoroutine(CountdownRoutine());
     }
 
@@ -59,15 +66,12 @@ public class CountDownManager : MonoBehaviour
         countdownActive = true;
         int timeLeft = countdownTime;
         countdownText.text = "";
-
-        // Enable raycast while countdown is active
         countdownText.raycastTarget = true;
 
         while (timeLeft > 0)
         {
             countdownText.text = timeLeft.ToString();
 
-            // Wait for 1 second but pause if needed
             float elapsed = 0f;
             while (elapsed < 1f)
             {
@@ -88,20 +92,13 @@ public class CountDownManager : MonoBehaviour
         }
 
         countdownText.text = "";
-
-        // Disable raycast after countdown ends
         countdownText.raycastTarget = false;
 
-        // Start the game
         if (gameStarter == null)
-        {
             gameStarter = FindObjectOfType<GoBagGameManager>();
-        }
 
         if (gameStarter != null)
-        {
             gameStarter.StartGame();
-        }
 
         countdownCoroutine = null;
         countdownActive = false;
@@ -112,8 +109,6 @@ public class CountDownManager : MonoBehaviour
     {
         countdownFinished = false;
         countdownText.text = "";
-
-        // also ensure raycast is off when reset
         countdownText.raycastTarget = false;
     }
 }

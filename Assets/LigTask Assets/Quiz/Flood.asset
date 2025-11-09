@@ -112,22 +112,22 @@ MonoBehaviour:
     - 'Throw it away  '
     - 'Sell it to others '
     correctAnswerIndex: 2
-  - questionText: After a flood, why do health workers spray fogging chemicals in
-      communities?
+  - questionText: 'If you get a wound during flood cleanup, what should you do first?
+
+'
     options:
-    - 'To clean muddy streets '
-    - To kill mosquitoes and prevent dengue or malaria
-    - ' To make the air smell better '
-    - 'To dry the roads faster '
+    - 'Ignore it '
+    - 'Wash with clean water and disinfect  '
+    - 'Cover it with mud '
+    - 'Wait until it heals itself '
     correctAnswerIndex: 1
-  - questionText: If fogging is happening in your area, what should you and your
-      family do?
+  - questionText: "Why should you clean your home thoroughly after a flood?\r"
     options:
-    - Follow the fogging truck outside
-    - Spray your own insecticides too
-    - Stay indoors and close doors/windows
-    - Play near the fogging machine
-    correctAnswerIndex: 2
+    - To look neat
+    - 'To remove mud, germs, and possible mold  '
+    - 'To impress visitors '
+    - ' To prepare for painting '
+    correctAnswerIndex: 1
   - questionText: 'If you see stagnant water left after a flood, why should you clear
       it?
 

@@ -7,32 +7,24 @@ using UnityEngine.SceneManagement;
 public class QuizManager : MonoBehaviour, IGameStarter
 {
     [Header("Quiz Data")]
-    public Quiz currentQuiz;   // Assign in Inspector
+    public Quiz currentQuiz;
 
     [Header("UI References")]
-    public TMP_Text questionText;      
-    public Button[] optionButtons;     
+    public TMP_Text questionText;
+    public TMP_Text questionCounterText;   // 👈 New text for "Question X of Y"
+    public Button[] optionButtons;
 
-    [Header("Managers")]
-    public FeedbackManager feedbackManager;
+    [Header("Button Sprites")]
+    public Sprite defaultSprite;
+    public Sprite correctSprite;
+    public Sprite incorrectSprite;
 
     private List<Questions> quizQuestions = new List<Questions>();
     private int currentQuestionIndex = 0;
     private int score = 0;
     private int maxScore = 0;
     private bool isRunning = false;
-
-    private void Awake()
-    {
-        if (feedbackManager == null)
-        {
-            feedbackManager = FindObjectOfType<FeedbackManager>();
-            if (feedbackManager != null)
-                Debug.Log("[QuizManager] FeedbackManager found automatically!");
-            else
-                Debug.LogWarning("[QuizManager] FeedbackManager not found in scene. Feedback will be disabled.");
-        }
-    }
+    private bool isAnswerSelected = false;
 
     public void StartGame()
     {
@@ -44,7 +36,6 @@ public class QuizManager : MonoBehaviour, IGameStarter
 
         isRunning = true;
         score = 0;
-
         quizQuestions = new List<Questions>(currentQuiz.questions);
         ShuffleList(quizQuestions);
 
@@ -67,9 +58,19 @@ public class QuizManager : MonoBehaviour, IGameStarter
             return;
         }
 
+        isAnswerSelected = false;
+        ResetButtonSprites();
+
         Questions q = quizQuestions[currentQuestionIndex];
         questionText.text = q.questionText;
 
+        // 🧮 Update "Question X of Y" text
+        if (questionCounterText != null)
+        {
+            questionCounterText.text = $"{currentQuestionIndex + 1}";
+        }
+
+        // Randomize option order
         List<int> optionOrder = new List<int>();
         for (int i = 0; i < q.options.Length; i++) optionOrder.Add(i);
         ShuffleList(optionOrder);
@@ -86,7 +87,7 @@ public class QuizManager : MonoBehaviour, IGameStarter
 
                 int choiceIndex = optionOrder[i];
                 optionButtons[i].onClick.RemoveAllListeners();
-                optionButtons[i].onClick.AddListener(() => SubmitAnswer(choiceIndex));
+                optionButtons[i].onClick.AddListener(() => SubmitAnswer(choiceIndex, q.correctAnswerIndex));
             }
             else
             {
@@ -95,26 +96,58 @@ public class QuizManager : MonoBehaviour, IGameStarter
         }
     }
 
-    private void SubmitAnswer(int selectedIndex)
+    private void SubmitAnswer(int selectedIndex, int correctIndex)
     {
-        if (!isRunning) return;
+        if (!isRunning || isAnswerSelected) return;
+        isAnswerSelected = true;
 
         Questions q = quizQuestions[currentQuestionIndex];
+        bool isCorrect = selectedIndex == correctIndex;
 
-        if (selectedIndex == q.correctAnswerIndex)
+        // Update button visuals
+        for (int i = 0; i < optionButtons.Length; i++)
+        {
+            Image btnImage = optionButtons[i].GetComponent<Image>();
+            TMP_Text btnText = optionButtons[i].GetComponentInChildren<TMP_Text>();
+
+            if (btnText == null || btnImage == null) continue;
+
+            if (btnText.text == q.options[selectedIndex])
+                btnImage.sprite = isCorrect ? correctSprite : incorrectSprite;
+
+            if (btnText.text == q.options[correctIndex])
+                btnImage.sprite = correctSprite;
+
+            optionButtons[i].onClick.RemoveAllListeners();
+        }
+
+        if (isCorrect)
         {
             score += 10;
             Debug.Log("✅ Correct!");
-            if (feedbackManager != null) feedbackManager.ShowPositive();
         }
         else
         {
             Debug.Log("❌ Wrong!");
-            if (feedbackManager != null) feedbackManager.ShowNegative();
         }
 
+        Invoke(nameof(NextQuestion), 1f);
+    }
+
+    private void NextQuestion()
+    {
         currentQuestionIndex++;
         ShowQuestion();
+    }
+
+    private void ResetButtonSprites()
+    {
+        foreach (Button btn in optionButtons)
+        {
+            Image btnImage = btn.GetComponent<Image>();
+            if (btnImage != null)
+                btnImage.sprite = defaultSprite;
+        }
     }
 
     public void EndGame()
@@ -128,29 +161,22 @@ public class QuizManager : MonoBehaviour, IGameStarter
 
     private void SaveAndTransition()
     {
-        // Get current context from SceneTracker
         string disaster = SceneTracker.CurrentDisaster ?? "Unknown";
-        string difficulty = SceneTracker.CurrentDifficulty ?? "Easy"; 
+        string difficulty = SceneTracker.CurrentDifficulty ?? "Easy";
         string currentScene = SceneManager.GetActiveScene().name;
 
-        // Passing score: 70% for quizzes
         int passingScore = Mathf.RoundToInt(maxScore * 0.7f);
         bool passed = score >= passingScore;
 
-        // Save results to GameResults
         GameResults.Score = score;
         GameResults.Passed = passed;
         GameResults.DisasterName = disaster;
         GameResults.Difficulty = difficulty;
-        GameResults.MiniGameIndex = -1; // quiz is terminal, no index
+        GameResults.MiniGameIndex = -1;
 
-        // Save to DB (force difficulty Easy for consistency in menu if needed)
-        DBManager.SaveProgress(disaster, "Easy", -1, passed);
-
-        // Update SceneTracker with last scene = current quiz
+        DBManager.SaveProgress(disaster, "Quiz", -1, passed);
         SceneTracker.SetCurrentMiniGame(disaster, difficulty, currentScene);
 
-        // Transition
         SceneManager.LoadScene("TransitionScene");
     }
 

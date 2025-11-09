@@ -34,7 +34,7 @@ MonoBehaviour:
   - questionText: ' Why should you practice earthquake drills in school or at home?'
     options:
     - 'To waste time from class '
-    - "To know what to do even if you don\u2019t notice the earthquake right away "
+    - To be prepared when there is an earthquake
     - 'To compete with other students '
     - To follow tradition
     correctAnswerIndex: 1

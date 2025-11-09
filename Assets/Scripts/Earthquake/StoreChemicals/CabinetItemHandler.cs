@@ -9,7 +9,6 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
 {
     [Header("References")]
     public GoBagDataTest cabinetData;
-    public Transform cabinetGrid;
     public RectTransform basketDropZone;
     public FeedbackManager feedbackManager;
     public RectTransform itemContainer; // Container inside basket for items
@@ -31,19 +30,19 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
     [SerializeField] private float basketPaddingBottom = 10f;
 
     private int score = 0;
-    private List<Transform> slots = new List<Transform>();
-    private bool gameRunning = false;
 
+    [Header("Manually Assigned Slots")]
+    public List<Transform> slots = new List<Transform>();
+
+    private bool gameRunning = false;
     private HashSet<GoBagItem> collectedNecessaryItems = new HashSet<GoBagItem>();
     private List<GoBagItem> spawnedNecessaryItems = new List<GoBagItem>();
 
     private void Start()
     {
-        foreach (Transform child in cabinetGrid)
-        {
-            slots.Add(child);
-            child.gameObject.SetActive(false);
-        }
+        // Disable all assigned slots at the start
+        foreach (Transform slot in slots)
+            slot.gameObject.SetActive(false);
 
         SpawnItems();
         EnsureBasketSpriteOnTop();
@@ -79,7 +78,7 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
             drag.manager = this;
             drag.itemData = item;
             drag.originalParent = slots[i];
-            drag.enabled = true; // Items can still be dragged
+            drag.enabled = true;
 
             if (item.isNecessary) spawnedNecessaryItems.Add(item);
         }
@@ -144,37 +143,45 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
     }
 
     private IEnumerator AnimateBasketToCenter(System.Action onComplete)
-{
-    if (basketDropZone == null)
     {
-        onComplete?.Invoke();
-        yield break;
-    }
-
-    Vector3 startPos = basketDropZone.position;
-    Vector3 targetPos = new Vector3(Screen.width / 2f, Screen.height / 2f, startPos.z);
-
-    // Record initial offsets of children relative to basket
-    Dictionary<Transform, Vector3> childOffsets = new Dictionary<Transform, Vector3>();
-    if (itemContainer != null)
-    {
-        foreach (Transform child in itemContainer)
+        if (basketDropZone == null)
         {
-            childOffsets[child] = child.position - startPos; // world offset
+            onComplete?.Invoke();
+            yield break;
         }
-    }
 
-    float duration = 1f;
-    float elapsed = 0f;
+        Vector3 startPos = basketDropZone.position;
+        Vector3 targetPos = new Vector3(Screen.width / 2f, Screen.height / 2f, startPos.z);
 
-    while (elapsed < duration)
-    {
-        float t = elapsed / duration;
+        Dictionary<Transform, Vector3> childOffsets = new Dictionary<Transform, Vector3>();
+        if (itemContainer != null)
+        {
+            foreach (Transform child in itemContainer)
+                childOffsets[child] = child.position - startPos;
+        }
 
-        // Move basket
-        basketDropZone.position = Vector3.Lerp(startPos, targetPos, t);
+        float duration = 1f;
+        float elapsed = 0f;
 
-        // Move children maintaining offsets
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            basketDropZone.position = Vector3.Lerp(startPos, targetPos, t);
+
+            if (itemContainer != null)
+            {
+                foreach (Transform child in itemContainer)
+                {
+                    if (childOffsets.ContainsKey(child))
+                        child.position = basketDropZone.position + childOffsets[child];
+                }
+            }
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        basketDropZone.position = targetPos;
         if (itemContainer != null)
         {
             foreach (Transform child in itemContainer)
@@ -184,32 +191,15 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
             }
         }
 
-        elapsed += Time.deltaTime;
-        yield return null;
-    }
-
-    // Ensure final position
-    basketDropZone.position = targetPos;
-    if (itemContainer != null)
-    {
-        foreach (Transform child in itemContainer)
+        if (itemContainer != null)
         {
-            if (childOffsets.ContainsKey(child))
-                child.position = basketDropZone.position + childOffsets[child];
+            foreach (Transform child in itemContainer)
+                Destroy(child.gameObject);
         }
+
+        basketDropZone.gameObject.SetActive(false);
+        onComplete?.Invoke();
     }
-
-    // Destroy or hide basket and children
-    if (itemContainer != null)
-    {
-        foreach (Transform child in itemContainer)
-            Destroy(child.gameObject);
-    }
-
-    basketDropZone.gameObject.SetActive(false);
-
-    onComplete?.Invoke();
-}
 
     private IEnumerator SoftFallIntoBasket(GameObject obj)
     {
@@ -217,7 +207,6 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
         Vector3 worldPos = rect.position;
         Vector3 worldScale = rect.lossyScale;
 
-        // Reparent into itemContainer
         if (itemContainer != null)
             obj.transform.SetParent(itemContainer, true);
 
@@ -275,46 +264,43 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
     public int GetScore() => score;
 
     private void EndRound()
-{
-    foreach (Transform slot in slots)
-        foreach (Transform child in slot)
-            Destroy(child.gameObject);
-
-    collectedNecessaryItems.Clear();
-    spawnedNecessaryItems.Clear();
-    currentRound++;
-
-    if (currentRound <= totalRounds)
     {
-        SpawnItems();
-    }
-    else
-    {
-        if (timer != null) timer.StopTimer();
+        foreach (Transform slot in slots)
+            foreach (Transform child in slot)
+                Destroy(child.gameObject);
 
-        // Swap cabinet first, then animate basket
-        var cabinetManager = FindObjectOfType<CabinetManager>();
-        if (cabinetManager != null)
+        collectedNecessaryItems.Clear();
+        spawnedNecessaryItems.Clear();
+        currentRound++;
+
+        if (currentRound <= totalRounds)
         {
-            cabinetManager.PlayCabinetSwap(() =>
+            SpawnItems();
+        }
+        else
+        {
+            if (timer != null) timer.StopTimer();
+
+            var cabinetManager = FindObjectOfType<CabinetManager>();
+            if (cabinetManager != null)
             {
-                // After swap finishes, animate basket
+                cabinetManager.PlayCabinetSwap(() =>
+                {
+                    StartCoroutine(AnimateBasketToCenter(() =>
+                    {
+                        EndGame();
+                    }));
+                });
+            }
+            else
+            {
                 StartCoroutine(AnimateBasketToCenter(() =>
                 {
                     EndGame();
                 }));
-            });
-        }
-        else
-        {
-            // fallback: animate basket directly
-            StartCoroutine(AnimateBasketToCenter(() =>
-            {
-                EndGame();
-            }));
+            }
         }
     }
-}
 
     public void StartGame()
     {
@@ -343,36 +329,45 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
     }
 
     private void ForceSwap()
-{
-    if (!gameRunning) return;
-    gameRunning = false;
-
-    foreach (Transform slot in slots)
-        foreach (Transform child in slot)
-            Destroy(child.gameObject);
-
-    collectedNecessaryItems.Clear();
-    spawnedNecessaryItems.Clear();
-
-    var cabinetManager = FindObjectOfType<CabinetManager>();
-    if (cabinetManager != null)
     {
-        cabinetManager.PlayCabinetSwap(() =>
-        {
-            StartCoroutine(AnimateBasketToCenter(() =>
-            {
-                EndGame();
-            }));
-        });
-    }
-    else
-    {
-        StartCoroutine(AnimateBasketToCenter(() =>
+        if (!gameRunning) return;
+        gameRunning = false;
+
+        foreach (Transform slot in slots)
+            foreach (Transform child in slot)
+                Destroy(child.gameObject);
+
+        collectedNecessaryItems.Clear();
+
+        var cabinetManager = FindObjectOfType<CabinetManager>();
+
+        if (collectedNecessaryItems.Count == 0)
         {
             EndGame();
-        }));
+        }
+        else
+        {
+            if (cabinetManager != null)
+            {
+                cabinetManager.PlayCabinetSwap(() =>
+                {
+                    StartCoroutine(AnimateBasketToCenter(() =>
+                    {
+                        EndGame();
+                        spawnedNecessaryItems.Clear();
+                    }));
+                });
+            }
+            else
+            {
+                StartCoroutine(AnimateBasketToCenter(() =>
+                {
+                    EndGame();
+                    spawnedNecessaryItems.Clear();
+                }));
+            }
+        }
     }
-}
 
     private void EndGame()
     {
@@ -414,20 +409,20 @@ public class CabinetDraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandl
         canvasGroup = gameObject.AddComponent<CanvasGroup>();
     }
 
-    public void OnBeginDrag(UnityEngine.EventSystems.PointerEventData eventData)
+    public void OnBeginDrag(PointerEventData eventData)
     {
         originalParent = transform.parent;
-        transform.SetParent(manager.cabinetGrid.parent, true);
+        transform.SetParent(manager.itemContainer.parent, true);
         canvasGroup.blocksRaycasts = false;
         canvasGroup.alpha = 0.7f;
     }
 
-    public void OnDrag(UnityEngine.EventSystems.PointerEventData eventData)
+    public void OnDrag(PointerEventData eventData)
     {
         rectTransform.position += (Vector3)eventData.delta;
     }
 
-    public void OnEndDrag(UnityEngine.EventSystems.PointerEventData eventData)
+    public void OnEndDrag(PointerEventData eventData)
     {
         manager.HandleDrop(itemData, rectTransform.position, this);
         canvasGroup.blocksRaycasts = true;

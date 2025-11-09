@@ -18,8 +18,8 @@ public static class SceneTracker
         { "Flood_Easy", new string[] { "FloodEasy", "FloodEasy2", "FloodEasy3", "FloodEasy5", "FloodQuiz" } },
         { "Flood_Hard", new string[] { "FloodHard", "FloodHard2", "FloodHard3", "FloodHard5", "FloodQuiz" } },
 
-        { "Earthquake_Easy", new string[] { "EarthquakeEasy", "EarthquakeEasy2", "EarthquakeEasy3", "EarthquakeQuiz" } },
-        { "Earthquake_Hard", new string[] { "EarthquakeHard", "EarthquakeHard2", "EarthquakeHard3", "EarthquakeQuiz" } },
+        { "Earthquake_Easy", new string[] { "EarthquakeEasy", "EarthquakeEasy2", "EarthquakeEasy3", "EarthquakeEasy4", "EarthquakeEasy5", "EarthquakeQuiz" } },
+        { "Earthquake_Hard", new string[] { "EarthquakeHard", "EarthquakeHard2", "EarthquakeHard3", "EarthquakeHard4", "EarthquakeHard5" } },
 
         { "Landslide_Easy", new string[] { "LandslideEasy", "LandslideEasy2", "LandslideEasy3", "LandslideQuiz" } },
         { "Landslide_Hard", new string[] { "LandslideHard", "LandslideHard2", "LandslideHard3", "LandslideQuiz" } },

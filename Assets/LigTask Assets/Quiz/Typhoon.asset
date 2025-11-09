@@ -78,9 +78,9 @@ MonoBehaviour:
     - "Move the injured person immediately to another place, even if it\u2019s not
       safe yet"
     - Wait for the rain to stop
-    - "Give first aid if it is safe. If it\u2019s not safe or the injury is serious,
+    - "Give first aid if it is safef it\u2019s not safe or the injury is serious,
       call for help right away "
-    - Take a video and post about it online
+    - Take a video and post it online
     correctAnswerIndex: 2
   - questionText: What should you AVOID after the storm?
     options:
@@ -98,17 +98,17 @@ MonoBehaviour:
     correctAnswerIndex: 2
   - questionText: Why should you avoid wading in floodwaters after a typhoon?
     options:
-    - Because it is cold
-    - Because it is fun to splash
-    - Because you might get sunburnt
-    - Because floodwater can contain leptospirosis
+    - It is cold
+    - It is fun to splash
+    - You might get sunburnt
+    - Floodwater can contain leptospirosis
     correctAnswerIndex: 3
   - questionText: What should you do with spoiled food after a typhoon?
     options:
     - Throw it away to avoid food poisoning
     - Eat it quickly before it smells
     - Feed it to pets
-    - Store it in the fridge again
+    - Store it in the fridge
     correctAnswerIndex: 0
   - questionText: What should you do before using tap water after a typhoon?
     options:

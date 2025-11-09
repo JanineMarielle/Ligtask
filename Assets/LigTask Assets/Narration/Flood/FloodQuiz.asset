@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: FloodQuiz
   m_EditorClassIdentifier: 
   lines:
-  - Time to test your knowledge again!
+  - Time to test your knowledge!
   - Reach a passing score of 60% to unlock Flood Hard mode.
   - Goodluck!
+  voiceClips: []

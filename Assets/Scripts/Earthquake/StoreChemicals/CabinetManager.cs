@@ -2,12 +2,13 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class CabinetManager : MonoBehaviour
 {
     [Header("Cabinets")]
     public RectTransform currentCabinet;
-    public RectTransform nextCabinet; // Assign in Inspector
+    public RectTransform nextCabinet;
 
     [Header("Animation Settings")]
     public float zoomOutScale = 1f;
@@ -18,15 +19,26 @@ public class CabinetManager : MonoBehaviour
     public float incomingStartX = 1500f;
 
     [Header("Basket Settings")]
-    public RectTransform basketDropZone; // Assign in Inspector
-    public RectTransform itemContainer;  // Assign in Inspector
+    public RectTransform basketDropZone;
+    public RectTransform itemContainer;
     public float basketAnimDuration = 1f;
+
+    [Header("Cabinet Replacement")] 
+    public Image cabinetImageToReplace;
+    public Sprite replacementCabinetSprite;
+    public Sprite finalCabinetSprite;
+
+    // 👇 Add this
+    private float fixedY = 0f; // You can adjust this in the Inspector if needed
 
     private void Awake()
     {
-        // Place next cabinet offscreen at start
+        // You can also automatically capture the current Y position of the cabinet
+        if (currentCabinet != null)
+            fixedY = currentCabinet.anchoredPosition.y;
+
         if (nextCabinet != null)
-            nextCabinet.anchoredPosition = new Vector2(incomingStartX, nextCabinet.anchoredPosition.y);
+            nextCabinet.anchoredPosition = new Vector2(incomingStartX, fixedY);
     }
 
     public void PlayCabinetSwap(Action onFinished)
@@ -58,9 +70,9 @@ public class CabinetManager : MonoBehaviour
 
         // --- Step 2: Slide cabinets ---
         Vector2 oldStart = currentCabinet.anchoredPosition;
-        Vector2 oldEnd = new Vector2(offscreenX, oldStart.y);
-        Vector2 newStart = new Vector2(incomingStartX, nextCabinet.anchoredPosition.y);
-        Vector2 newEnd = new Vector2(onscreenX, newStart.y);
+        Vector2 oldEnd = new Vector2(offscreenX, fixedY);
+        Vector2 newStart = new Vector2(incomingStartX, fixedY);
+        Vector2 newEnd = new Vector2(onscreenX, fixedY);
 
         elapsed = 0f;
         while (elapsed < slideDuration)
@@ -78,6 +90,23 @@ public class CabinetManager : MonoBehaviour
         // --- Step 3: Animate basket + items AFTER swap ---
         yield return StartCoroutine(AnimateBasketToCenter());
 
+        // --- Step 4: First replacement ---
+        if (cabinetImageToReplace != null && replacementCabinetSprite != null)
+        {
+            cabinetImageToReplace.sprite = replacementCabinetSprite;
+            cabinetImageToReplace.preserveAspect = true;
+        }
+
+        // --- Step 5: Wait 1 second, then final replacement ---
+        yield return new WaitForSeconds(1f);
+
+        if (cabinetImageToReplace != null && finalCabinetSprite != null)
+        {
+            cabinetImageToReplace.sprite = finalCabinetSprite;
+            cabinetImageToReplace.preserveAspect = true;
+        }
+
+        // --- Step 6: Continue end sequence ---
         onFinished?.Invoke();
     }
 
@@ -88,7 +117,6 @@ public class CabinetManager : MonoBehaviour
         Vector3 startPos = basketDropZone.position;
         Vector3 targetPos = new Vector3(Screen.width / 2f, Screen.height / 2f, startPos.z);
 
-        // Record initial offsets of children relative to basket
         Dictionary<Transform, Vector3> childOffsets = new Dictionary<Transform, Vector3>();
         if (itemContainer != null)
         {
@@ -115,20 +143,20 @@ public class CabinetManager : MonoBehaviour
             yield return null;
         }
 
-        // Final positions
         basketDropZone.position = targetPos;
+
         if (itemContainer != null)
         {
             foreach (Transform child in itemContainer)
                 child.position = basketDropZone.position + childOffsets[child];
         }
 
-        // Destroy children and hide basket
         if (itemContainer != null)
         {
             foreach (Transform child in itemContainer)
                 Destroy(child.gameObject);
         }
+
         basketDropZone.gameObject.SetActive(false);
     }
 }

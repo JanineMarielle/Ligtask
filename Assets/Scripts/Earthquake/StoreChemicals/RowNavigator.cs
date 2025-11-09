@@ -1,17 +1,20 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class RowNavigator : MonoBehaviour
 {
     [Header("References")]
-    public RectTransform cabinetImage;     
-    public RectTransform cabinetGrid;      
+    public RectTransform cabinetImage;
     public Button nextRowButton;
     public Button previousRowButton;
 
+    [Header("Row Targets")]
+    [Tooltip("Assign the RectTransforms representing the rows, e.g. element 0, 5, and 10.")]
+    public List<RectTransform> rowElements; // Should contain elements 0, 5, and 10
+
     [Header("Settings")]
-    public int totalRows = 3;
     public float transitionDuration = 0.5f;
     public float initialZoomScale = 1.2f;
     public float zoomDuration = 0.8f;
@@ -19,17 +22,11 @@ public class RowNavigator : MonoBehaviour
     private int currentRow = 0;
     private Vector3 originalCabinetScale;
     private Vector2 originalCabinetPos;
-    private GridLayoutGroup gridLayout;
 
     private void Awake()
     {
-        // Force pivot to top so zoom starts at row 0
-        cabinetImage.pivot = new Vector2(0.5f, 1f);
-
         originalCabinetScale = cabinetImage.localScale;
         originalCabinetPos = cabinetImage.anchoredPosition;
-
-        gridLayout = cabinetGrid.GetComponent<GridLayoutGroup>();
 
         nextRowButton.interactable = false;
         previousRowButton.interactable = false;
@@ -70,7 +67,7 @@ public class RowNavigator : MonoBehaviour
 
     public void NextRow()
     {
-        if (currentRow < totalRows - 1)
+        if (currentRow < rowElements.Count - 1)
         {
             currentRow++;
             StartCoroutine(AnimateCabinetToRow(currentRow));
@@ -91,25 +88,19 @@ public class RowNavigator : MonoBehaviour
     private void UpdateButtonInteractable()
     {
         previousRowButton.interactable = currentRow > 0;
-        nextRowButton.interactable = currentRow < totalRows - 1;
-    }
-
-    private float GetRowHeight()
-    {
-        if (gridLayout != null)
-        {
-            return gridLayout.cellSize.y + gridLayout.spacing.y;
-        }
-        return 200f; // fallback
+        nextRowButton.interactable = currentRow < rowElements.Count - 1;
     }
 
     private IEnumerator AnimateCabinetToRow(int targetRow)
     {
+        if (targetRow < 0 || targetRow >= rowElements.Count)
+            yield break;
+
         Vector2 startPos = cabinetImage.anchoredPosition;
 
-        // Calculate actual row height considering zoom
-        float scaledRowHeight = GetRowHeight() * cabinetImage.localScale.y;
-        Vector2 endPos = originalCabinetPos + new Vector2(0, targetRow * scaledRowHeight);
+        // Get the Y position of the target element relative to the cabinet parent
+        float targetY = -rowElements[targetRow].anchoredPosition.y;
+        Vector2 endPos = new Vector2(originalCabinetPos.x, targetY);
 
         float elapsed = 0f;
         while (elapsed < transitionDuration)

@@ -57,7 +57,23 @@ public class SidePanelController : MonoBehaviour
 
     private void UpdatePanelWidth()
     {
-        float newWidth = Screen.width * 0.25f;
+        // Get the canvas scaler if available
+        Canvas canvas = sidePanel.GetComponentInParent<Canvas>();
+        CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
+
+        float scaleFactor = 1f;
+
+        if (scaler != null && scaler.uiScaleMode == CanvasScaler.ScaleMode.ScaleWithScreenSize)
+        {
+            // Calculate scaling based on reference resolution
+            float logWidth = Mathf.Log(Screen.width / scaler.referenceResolution.x, 2);
+            float logHeight = Mathf.Log(Screen.height / scaler.referenceResolution.y, 2);
+            float logWeightedAverage = Mathf.Lerp(logWidth, logHeight, scaler.matchWidthOrHeight);
+            scaleFactor = Mathf.Pow(2, logWeightedAverage);
+        }
+
+        // Adjust width using the scale factor
+        float newWidth = (Screen.width * 0.3f) / scaleFactor;
         sidePanel.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
         panelWidth = newWidth;
 

@@ -16,3 +16,5 @@ MonoBehaviour:
   - 'Tap on switches that are still on to turn them off. '
   - 'Once all the active switches are off, tap the main circuit breaker to cut the
     power completely. '
+  - Make sure to turn of all the switches before the main circuit breaker or you'll
+    lose points!

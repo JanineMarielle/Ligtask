@@ -19,3 +19,5 @@ MonoBehaviour:
     your Go Bag. If not, slide it up to discard it. \r"
   - Time limits get shorter at higher difficulty and some rounds may have a mix of
     necessary and unnecessary items, choose quickly!
+  voiceClips:
+  - {fileID: 8300000, guid: 240d60a901443f4448c51b991dbe8e2a, type: 3}
