@@ -11,9 +11,13 @@ public class SettingsMenu : MonoBehaviour
     public Slider musicSlider;
     public Slider narrationSlider;
     public Slider sfxSlider; // ✅ new slider for sound effects
+    public Toggle bgAnimationToggle; // ✅ new toggle
 
     [Header("Blur Background")]
     public GameObject blurBackground;
+
+    [Header("Background Animator")]
+    public Animator bgAnimator; // ✅ reference to background animator
 
     [Header("Settings Button Padding")]
     public Vector2 buttonPadding = new Vector2(20f, 20f);
@@ -36,6 +40,18 @@ public class SettingsMenu : MonoBehaviour
         musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
         narrationSlider.value = PlayerPrefs.GetFloat("NarrationVolume", 1f);
         sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
+
+        // ✅ Load saved background animation preference
+        bool isAnimationOn = PlayerPrefs.GetInt("BGAnimation", 1) == 1;
+        if (bgAnimationToggle != null)
+        {
+            bgAnimationToggle.isOn = isAnimationOn;
+            bgAnimationToggle.onValueChanged.AddListener(SetBGAnimation);
+        }
+
+        // Apply animation state
+        if (bgAnimator != null)
+            bgAnimator.enabled = isAnimationOn;
 
         // ✅ Add slider listeners
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
@@ -95,5 +111,13 @@ public class SettingsMenu : MonoBehaviour
             AudioManager.Instance.SetSFXVolume(value);
 
         PlayerPrefs.SetFloat("SFXVolume", value);
+    }
+
+    public void SetBGAnimation(bool isOn)
+    {
+        if (bgAnimator != null)
+            bgAnimator.enabled = isOn;
+
+        PlayerPrefs.SetInt("BGAnimation", isOn ? 1 : 0);
     }
 }
