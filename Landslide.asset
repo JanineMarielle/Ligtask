@@ -1,0 +1,138 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 054619df3e1d1c14bb076078c429ff3d, type: 3}
+  m_Name: Landslide
+  m_EditorClassIdentifier: 
+  disasterName: 
+  questions:
+  - questionText: 'Why does tree planting help prevent landslides?
+
+'
+    options:
+    - 'Trees absorb rainwater, reducing soil saturation '
+    - 'Trees attract animals that stabilize soil '
+    - 'Trees make the soil heavier '
+    - 'Trees increase wind flow '
+    correctAnswerIndex: 0
+  - questionText: 'What is a key sign of a landslide-prone slope?
+
+'
+    options:
+    - 'Slopes with cracks, leaning trees, or bulging soil '
+    - 'Flat, dry fields '
+    - 'Areas with no rainfall '
+    - 'Sandy beaches '
+    correctAnswerIndex: 0
+  - questionText: How does cleaning road drains help reduce landslides?
+    options:
+    - 'It prevents water from pooling and saturating slopes '
+    - 'It makes roads look clean '
+    - 'It encourages fish to live nearby '
+    - 'It helps cars move faster '
+    correctAnswerIndex: 0
+  - questionText: 'What should you do first when assessing a slope for landslide
+      risk?
+
+'
+    options:
+    - 'Look for cracks, leaning trees, or water seepage '
+    - 'Plant flowers '
+    - 'Build a sandcastle '
+    - 'Take a nap '
+    correctAnswerIndex: 0
+  - questionText: During heavy rain, which activity can help prevent landslides near
+      homes?
+    options:
+    - 'Clearing trash from drains and gutters '
+    - Lighting candles outside
+    - 'Painting the fence '
+    - ' Installing loudspeakers '
+    correctAnswerIndex: 0
+  - questionText: "Which of the following increases the risk of landslides?\r"
+    options:
+    - 'Deforestation and soil erosion '
+    - 'Planting deep-rooted trees '
+    - Installing proper drainage
+    - 'Regular slope maintenance '
+    correctAnswerIndex: 0
+  - questionText: "What is the safest action if a landslide occurs suddenly nearby?\r"
+    options:
+    - Move quickly to higher ground
+    - Stand and watch
+    - 'Take photos '
+    - 'Run downhill '
+    correctAnswerIndex: 0
+  - questionText: Why is slope monitoring important in landslide-prone areas?
+    options:
+    - 'It helps detect early signs of soil movement '
+    - It helps grow crops faster
+    - 'It improves air quality '
+    - 'It reduces wind speed '
+    correctAnswerIndex: 0
+  - questionText: 'What condition makes a slope more likely to experience a landslide?
+
+'
+    options:
+    - Heavy rainfall that saturates the soil
+    - 'Dry weather with no rain '
+    - 'Rocky hills with little soil '
+    - 'Paved roads '
+    correctAnswerIndex: 0
+  - questionText: "What is a \u201Cgo-bag\u201D and how is it useful for landslides?\r"
+    options:
+    - 'A bag with emergency supplies to take to safety quickly '
+    - A bag for carrying groceries
+    - 'A bag for storing toys '
+    - 'A backpack for school books '
+    correctAnswerIndex: 0
+  - questionText: 'How does planting grasses and shrubs help reduce landslide risk?
+
+'
+    options:
+    - 'Their roots bind the soil, reducing erosion '
+    - 'They attract birds that scare away predators '
+    - 'They make the slope look greener '
+    - 'They increase soil weight for stability '
+    correctAnswerIndex: 0
+  - questionText: Why should heavy construction be avoided on steep slopes?
+    options:
+    - 'It increases the risk of slope failure '
+    - It improves soil drainage
+    - It makes the area cooler
+    - 'It helps plants grow '
+    correctAnswerIndex: 0
+  - questionText: ' What is the safest way to check for potential landslide hazards
+      on a slope?
+
+'
+    options:
+    - 'Observe from a safe distance and note cracks, leaning trees, or water seepage '
+    - 'Stand directly under the slope to test it '
+    - 'Dig into the slope with bare hands '
+    - 'Throw rocks at the slope '
+    correctAnswerIndex: 0
+  - questionText: ' What is a practical community action to reduce landslide risks?
+
+'
+    options:
+    - 'Organizing slope clean-ups and tree planting drives '
+    - 'Building large walls without permits '
+    - ' Ignoring minor cracks '
+    - 'Cutting all trees on slopes '
+    correctAnswerIndex: 0
+  - questionText: ' If a landslide occurs during rainfall, what should you avoid?'
+    options:
+    - 'Crossing the slope or river downstream '
+    - 'Moving to higher ground '
+    - Following evacuation routes
+    - 'Listening to emergency announcements '
+    correctAnswerIndex: 0

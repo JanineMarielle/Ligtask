@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 054619df3e1d1c14bb076078c429ff3d, type: 3}
+  m_Name: Volcanic Eruption
+  m_EditorClassIdentifier: 
+  disasterName: 
+  questions:
+  - questionText: "What is the main purpose of preparing an emergency go-bag before
+      a volcanic eruption?\r"
+    options:
+    - 'To store items you no longer need '
+    - 'To avoid buying supplies after the eruption '
+    - To have essential items ready for quick evacuation
+    - 'To keep your belongings organized '
+    correctAnswerIndex: 2
+  - questionText: 'Which item is most essential in a volcanic eruption go-bag?
+
+'
+    options:
+    - 'Beach sandals '
+    - 'Flashlight with extra batteries '
+    - 'Party decorations '
+    - 'Photo albums '
+    correctAnswerIndex: 1
+  - questionText: 'Why should windows and doors be closed during ashfall?
+
+'
+    options:
+    - 'To keep the house warm '
+    - 'To prevent insects from entering '
+    - To stop volcanic ash from getting inside
+    - 'To block sunlight '
+    correctAnswerIndex: 2
+  - questionText: 'What protective item should you wear to avoid inhaling volcanic
+      ash?
+
+'
+    options:
+    - 'Bandana '
+    - 'N95 or KN95 mask '
+    - 'Swimming goggles '
+    - 'Cloth scarf '
+    correctAnswerIndex: 1
+  - questionText: What is the safest action when authorities announce an evacuation
+      due to a volcanic eruption?
+    options:
+    - 'Wait for the ashfall to stop '
+    - 'Ignore the announcement '
+    - 'Evacuate immediately '
+    - 'Finish all household chores first '
+    correctAnswerIndex: 2
+  - questionText: 'When cleaning volcanic ash outside your home, what should you
+      avoid doing?
+
+'
+    options:
+    - 'Gently sweeping '
+    - Wearing a mask
+    - Wetting the ash before cleaning
+    - Using a leaf blower
+    correctAnswerIndex: 3
+  - questionText: What type of clothing is recommended when cleaning ash?
+    options:
+    - Sleeveless shirts and shorts
+    - 'Thick, long-sleeved clothing '
+    - Pajamas
+    - Swimwear
+    correctAnswerIndex: 1
+  - questionText: "Why must volcanic ash be cleaned from roofs as soon as possible?\r"
+    options:
+    - "It changes the roof\u2019s color "
+    - It is slippery
+    - Ash buildup is heavy and can cause roofs to collapse
+    - 'It attracts birds '
+    correctAnswerIndex: 2
+  - questionText: What should you do if heavy ashfall suddenly reduces visibility
+      outside?
+    options:
+    - 'Stay indoors and avoid going out '
+    - Walk outside to check the ash
+    - Open windows for fresh air
+    - 'Rely on streetlights for visibility '
+    correctAnswerIndex: 1
+  - questionText: 'Which action increases your safety during an ashfall advisory?
+
+'
+    options:
+    - Hanging laundry outside
+    - 'Covering your nose and mouth with a proper mask '
+    - 'Leaving water containers uncovered '
+    - 'Ignoring updates from authorities '
+    correctAnswerIndex: 1
+  - questionText: 'Why is it dangerous to stay near rivers or streams during or after
+      a volcanic eruption?
+
+      
+
+'
+    options:
+    - 'They may attract crowds '
+    - 'They smell bad during eruptions '
+    - 'They can carry fast-moving lahars (volcanic mudflows) '
+    - 'They block evacuation routes '
+    correctAnswerIndex: 2
+  - questionText: "What should you do if volcanic ash accumulates on your home\u2019s
+      windowsills and floors?\r"
+    options:
+    - 'Sweep it quickly without protection '
+    - 'Leave it; it will disappear '
+    - 'Wear protective gear and gently clean it '
+    - Spread it around to dry
+    correctAnswerIndex: 2
+  - questionText: 'Why is wearing goggles helpful during ashfall?
+
+'
+    options:
+    - 'They look stylish '
+    - 'They prevent ash from entering the eyes '
+    - 'They help you see in the dark '
+    - 'They block UV rays '
+    correctAnswerIndex: 1
+  - questionText: 'Which of the following should NOT be included in an emergency
+      go-bag?
+
+'
+    options:
+    - 'Important documents '
+    - 'Bottled water '
+    - 'Perishable food '
+    - 'First aid kit '
+    correctAnswerIndex: 2
+  - questionText: ' After an eruption, what is the safest way to check your surroundings?
+
+'
+    options:
+    - Walk around without protection
+    - Rely on rumors from neighbors
+    - 'Wait for official announcements and wear protective gear '
+    - 'Immediately return home without checking hazards '
+    correctAnswerIndex: 2
