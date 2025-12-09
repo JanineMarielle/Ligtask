@@ -377,4 +377,3 @@ public class GoBagGameManager : MonoBehaviour, IGameStarter
     }
 
 }
-    // Passing score is now 60% of maxScore

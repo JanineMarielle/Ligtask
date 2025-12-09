@@ -363,7 +363,7 @@ public class FireExtController : MonoBehaviour, IGameStarter
         string currentScene = SceneManager.GetActiveScene().name;
         string disaster = "Earthquake";
         string difficulty = currentScene.Contains("Hard") ? "Hard" : "Easy";
-        int miniGameIndex = 2;
+        int miniGameIndex = 4;
 
         GameResults.Score = score;
         GameResults.Passed = passed;

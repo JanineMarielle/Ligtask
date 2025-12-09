@@ -6,13 +6,14 @@ using System.Collections.Generic;
 public class RowNavigator : MonoBehaviour
 {
     [Header("References")]
-    public RectTransform cabinetImage;
+    public RectTransform cabinetImage;  // The full cabinet
+    public RectTransform viewport;      // The visible screen area (e.g., Scroll View viewport or parent panel)
     public Button nextRowButton;
     public Button previousRowButton;
 
     [Header("Row Targets")]
     [Tooltip("Assign the RectTransforms representing the rows, e.g. element 0, 5, and 10.")]
-    public List<RectTransform> rowElements; // Should contain elements 0, 5, and 10
+    public List<RectTransform> rowElements; // Assign element 0, 5, and 10 here
 
     [Header("Settings")]
     public float transitionDuration = 0.5f;
@@ -98,9 +99,18 @@ public class RowNavigator : MonoBehaviour
 
         Vector2 startPos = cabinetImage.anchoredPosition;
 
-        // Get the Y position of the target element relative to the cabinet parent
-        float targetY = -rowElements[targetRow].anchoredPosition.y;
-        Vector2 endPos = new Vector2(originalCabinetPos.x, targetY);
+        // Get the element position in cabinet space
+        Vector3 worldPos = rowElements[targetRow].TransformPoint(rowElements[targetRow].rect.center);
+
+        // Convert to viewport local space
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(viewport, RectTransformUtility.WorldToScreenPoint(null, worldPos), null, out localPoint);
+
+        // Compute the offset so the element is centered in the viewport
+        float viewportCenterY = 0f; // center of the viewport rect
+        float offsetY = viewportCenterY - localPoint.y;
+
+        Vector2 endPos = cabinetImage.anchoredPosition + new Vector2(0, offsetY);
 
         float elapsed = 0f;
         while (elapsed < transitionDuration)

@@ -231,7 +231,6 @@ public class StructureHard : MonoBehaviour, IGameStarter
         SetButtonsInteractable(false);
         SetCrackButtonsInteractable(false);
 
-        // ✅ Calculate final score: 20 points per found crack, scaled to percentage
         int rawScore = cracksFound * 20;
         float ratio = (totalCracks > 0) ? (float)cracksFound / totalCracks : 0f;
         int percentageScore = Mathf.RoundToInt(ratio * 100f);

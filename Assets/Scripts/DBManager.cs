@@ -45,7 +45,7 @@ public class DBManager : MonoBehaviour
         db.Insert(new DisasterProgress { DisasterName = "Earthquake" });
         db.Insert(new DisasterProgress { DisasterName = "Flood" });
         db.Insert(new DisasterProgress { DisasterName = "Landslide" });
-        db.Insert(new DisasterProgress { DisasterName = "Volcano" });
+        db.Insert(new DisasterProgress { DisasterName = "Volcanic" });
     }
 
     // -------------------------

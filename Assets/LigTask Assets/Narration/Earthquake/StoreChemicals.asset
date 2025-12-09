@@ -17,5 +17,6 @@ MonoBehaviour:
     during an earthquake, creating even more danger.
   - To stay safe, these items must be stored in locked cabinets or placed on sturdy
     shelves.
-  - Drag the cleaning liquids, gas cans, and other chemicals into the basket then
-    move them to a proper cabinet for safety.
+  - Drag the cleaning liquids, gas cans, and other chemicals into the basket to move
+    them to a proper cabinet for safety.
+  voiceClips: []

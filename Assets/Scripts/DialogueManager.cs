@@ -9,14 +9,25 @@ public class DialogueManager : MonoBehaviour
     public TextMeshProUGUI dialogueText;     
     public GameObject dialoguePanel;         
     public GameObject characterImage;        
-    public GameObject nextLineButton;        
+    public GameObject nextLineButton;
+
+    [Header("Tap To Continue Controller (Auto-Detected)")]
+    public TapToCont tapController;
 
     private int currentLine = 0;
     private bool isTyping = false;
-    private float typingSpeed = 0.03f; // typing speed per character
+    private float typingSpeed = 0.03f;
 
     void Start()
     {
+        if (tapController == null && dialoguePanel != null)
+        {
+            tapController = dialoguePanel.GetComponentInChildren<TapToCont>(true);
+
+            if (tapController == null)
+                Debug.LogWarning("DialogueManager: No TapToCont found in dialoguePanel!");
+        }
+
         ResizePanel();
         StartDialogue();
     }
@@ -44,12 +55,17 @@ public class DialogueManager : MonoBehaviour
         if (characterImage != null)
             characterImage.SetActive(true);
 
+        if (tapController != null)
+            tapController.HideTapToContinue();
+
         ShowLine();
     }
 
     public void NextLine()
     {
-        // If still typing, finish instantly
+        if (tapController != null)
+            tapController.HideTapToContinue();
+
         if (isTyping)
         {
             StopAllCoroutines();
@@ -59,10 +75,12 @@ public class DialogueManager : MonoBehaviour
             if (nextLineButton != null)
                 nextLineButton.GetComponent<Button>().interactable = true;
 
+            if (tapController != null)
+                tapController.ShowTapToContinue();
+
             return;
         }
 
-        // Stop current narration when skipping (safe null-check)
         if (AudioManager.Instance != null)
             AudioManager.Instance.StopNarration();
 
@@ -79,12 +97,15 @@ public class DialogueManager : MonoBehaviour
 
     void ShowLine()
     {
+        StopAllCoroutines();
+
+        if (tapController != null)
+            tapController.HideTapToContinue();
+
         if (currentLine >= 0 && currentLine < dialogueData.lines.Length)
         {
-            StopAllCoroutines();
             StartCoroutine(TypeLine(dialogueData.lines[currentLine]));
 
-            // Play matching voice clip (if available)
             if (AudioManager.Instance != null &&
                 dialogueData.voiceClips != null &&
                 currentLine < dialogueData.voiceClips.Length &&
@@ -92,7 +113,6 @@ public class DialogueManager : MonoBehaviour
             {
                 AudioManager.Instance.PlayNarration(dialogueData.voiceClips[currentLine]);
             }
-            // If voice clip is missing, just skip without any errors
         }
     }
 
@@ -111,10 +131,16 @@ public class DialogueManager : MonoBehaviour
 
         if (nextLineButton != null)
             nextLineButton.GetComponent<Button>().interactable = true;
+
+        if (tapController != null)
+            tapController.ShowTapToContinue();
     }
 
     void EndDialogue()
     {
+        if (tapController != null)
+            tapController.HideTapToContinue();
+
         dialoguePanel.SetActive(false);
 
         if (characterImage != null)
@@ -126,7 +152,6 @@ public class DialogueManager : MonoBehaviour
             nextLineButton.SetActive(false);
         }
 
-        // Stop narration when dialogue ends (safe null-check)
         if (AudioManager.Instance != null)
             AudioManager.Instance.StopNarration();
 

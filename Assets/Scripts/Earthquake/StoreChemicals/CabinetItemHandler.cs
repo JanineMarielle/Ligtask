@@ -50,9 +50,23 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
 
     private void SpawnItems()
     {
-        List<GoBagItem> itemsToSpawn = new List<GoBagItem>(cabinetData.allItems);
+        // Create a working copy of items
+        List<GoBagItem> itemsToSpawn = new List<GoBagItem>();
+
+        // Build a pool where each item can appear up to twice
+        foreach (GoBagItem item in cabinetData.allItems)
+        {
+            int duplicateCount = Random.Range(1, 3); // 1 or 2
+            for (int i = 0; i < duplicateCount; i++)
+            {
+                itemsToSpawn.Add(item);
+            }
+        }
+
+        // Shuffle the pool
         Shuffle(itemsToSpawn);
 
+        // Limit total items to number of slots available
         int spawnCount = Mathf.Min(itemsToSpawn.Count, slots.Count);
 
         for (int i = 0; i < spawnCount; i++)
@@ -80,7 +94,8 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
             drag.originalParent = slots[i];
             drag.enabled = true;
 
-            if (item.isNecessary) spawnedNecessaryItems.Add(item);
+            if (item.isNecessary && !spawnedNecessaryItems.Contains(item))
+                spawnedNecessaryItems.Add(item);
         }
     }
 
@@ -204,50 +219,33 @@ public class CabinetItemHandler : MonoBehaviour, IGameStarter
     private IEnumerator SoftFallIntoBasket(GameObject obj)
     {
         RectTransform rect = obj.GetComponent<RectTransform>();
-        Vector3 worldPos = rect.position;
-        Vector3 worldScale = rect.lossyScale;
 
+        // Move item under the basket container
         if (itemContainer != null)
             obj.transform.SetParent(itemContainer, true);
 
-        rect.position = worldPos;
-        rect.localScale = Vector3.one;
-        rect.localScale = new Vector3(
-            worldScale.x / rect.lossyScale.x,
-            worldScale.y / rect.lossyScale.y,
-            worldScale.z / rect.lossyScale.z
-        );
-
-        Vector3 startLocalPos = new Vector3(rect.localPosition.x, rect.localPosition.y + 200f, 0f);
-
+        // Basket bounds
         float xMin = basketDropZone.rect.xMin + basketPaddingLeft + rect.rect.width * 0.5f;
         float xMax = basketDropZone.rect.xMax - basketPaddingRight - rect.rect.width * 0.5f;
         float yMin = basketDropZone.rect.yMin + basketPaddingBottom + rect.rect.height * 0.5f;
         float yMax = basketDropZone.rect.yMax - basketPaddingTop - rect.rect.height * 0.5f;
 
+        // Pick a random position inside the basket
         Vector3 endLocalPos = new Vector3(
             Random.Range(xMin, xMax),
             Random.Range(yMin, yMax),
             0f
         );
 
-        rect.localPosition = startLocalPos;
-
-        float duration = 1.2f + Random.Range(0f, 0.3f);
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            rect.localPosition = Vector3.Lerp(startLocalPos, endLocalPos, elapsed / duration);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
         rect.localPosition = endLocalPos;
 
+        // Disable dragging after placed
         var drag = obj.GetComponent<CabinetDraggableItem>();
         if (drag != null) drag.enabled = false;
 
         EnsureBasketSpriteOnTop();
+
+        yield break;
     }
 
     private void Shuffle<T>(List<T> list)

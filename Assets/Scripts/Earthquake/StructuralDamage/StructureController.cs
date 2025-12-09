@@ -274,10 +274,10 @@ public class StructureController : MonoBehaviour, IGameStarter
         GameResults.Passed = passed;
         GameResults.DisasterName = "Earthquake";
         GameResults.MiniGameIndex = 5;
-        GameResults.Difficulty = "Hard";
+        GameResults.Difficulty = "Easy";
 
-        DBManager.SaveProgress("Earthquake", "Hard", 5, passed);
-        SceneTracker.SetCurrentMiniGame("Earthquake", "Hard", SceneManager.GetActiveScene().name);
+        DBManager.SaveProgress("Earthquake", "Easy", 5, passed);
+        SceneTracker.SetCurrentMiniGame("Earthquake", "Easy", SceneManager.GetActiveScene().name);
 
         Debug.Log($"🏁 Game Ended | Found: {cracksFound}/{totalCracks} | TimerEnded: {timerEnded} | Score: {score} pts | Passed: {passed}");
 

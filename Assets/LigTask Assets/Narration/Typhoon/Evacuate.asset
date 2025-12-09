@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abb433c6fec6b224d8b14629ae9222a7, type: 3}
+  m_Name: Evacuate
+  m_EditorClassIdentifier: 
+  lines:
+  - 'Your street is starting to flood, and the radio announced urgent evacuation
+    orders. '
+  - "Watch the sequence of arrows carefully\u2014up, down, or right\u2014and repeat
+    them in the same order. "
+  - Be quick and pay attention, each correct move brings you closer to safety!
+  voiceClips: []

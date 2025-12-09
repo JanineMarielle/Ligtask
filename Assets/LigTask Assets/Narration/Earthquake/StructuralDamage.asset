@@ -18,7 +18,7 @@ MonoBehaviour:
   - For this level, check for structural damage by finding cracks on the walls and
     rooms.
   - These cracks can weaken walls or foundations and if ignored, they might cause
-    collapse later.
-  - Tap on every crack you can find before time runs out. Some may be small, so stay
-    alert!
+    a collapse later.
+  - Tap on every crack you can find before time runs out. Some may be small, so look
+    carefully!
   voiceClips: []

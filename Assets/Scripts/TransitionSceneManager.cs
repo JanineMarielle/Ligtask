@@ -9,7 +9,7 @@ public class TransitionSceneManager : MonoBehaviour
     [Header("UI References")]
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI resultText;
-    public TextMeshProUGUI messageText;   // ✅ For short messages
+    public TextMeshProUGUI messageText;  
     public Button nextButton;
     public Button retryButton;
     public Button mainMenuButton;
@@ -36,36 +36,30 @@ public class TransitionSceneManager : MonoBehaviour
         bool isQuiz = !string.IsNullOrEmpty(SceneTracker.LastMinigameScene) &&
                       SceneTracker.LastMinigameScene.ToLower().Contains("quiz");
 
-        // ✅ Update result text
         if (isQuiz)
             resultText.text = passed ? "Quiz Passed" : "Fail";
         else
             resultText.text = passed ? "Success" : "Fail";
 
-        // ✅ Disable Next button if player failed
         nextButton.interactable = passed;
 
         Debug.Log($"Last mini-game: {SceneTracker.LastMinigameScene}");
         Debug.Log($"Current Disaster: {currentDisaster}, Difficulty: {currentDifficulty}");
 
-        // ✅ Determine if this is the first time passing the quiz
         bool firstTimePassedQuiz = false;
         if (isQuiz)
         {
             var progress = DBManager.GetDisasterProgress(currentDisaster);
             if (progress != null)
             {
-                // If the quiz wasn’t previously passed, mark as first time
                 firstTimePassedQuiz = !progress.QuizCompleted;
             }
         }
 
-        // ✅ Display appropriate short message
         if (isQuiz)
         {
             if (passed)
             {
-                // Only show unlock message if first time passing quiz
                 messageText.text = firstTimePassedQuiz
                     ? "You have unlocked a hard mode and a new minigame!"
                     : "";
@@ -80,16 +74,21 @@ public class TransitionSceneManager : MonoBehaviour
             messageText.text = passed ? "" : "Score higher points to unlock the next minigame.";
         }
 
-        // ✅ Handle Next button visibility
         nextButton.gameObject.SetActive(!isQuiz);
         mainMenuButton.gameObject.SetActive(true);
         retryButton.gameObject.SetActive(true);
 
-        // ✅ Play transition music
+        string nextScene = SceneTracker.PeekNextScene(currentDisaster, currentDifficulty);
+
+        if (string.IsNullOrEmpty(nextScene))
+        {
+            nextButton.interactable = false;
+            nextButton.gameObject.SetActive(false); 
+        }
+
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayTransitionMusic(passed);
 
-        // ✅ Play pass/fail animation
         StartCoroutine(PlayAnimation(passed ? passFrames : failFrames));
     }
 
@@ -107,7 +106,6 @@ public class TransitionSceneManager : MonoBehaviour
         }
     }
 
-    // ✅ Continue / Next button
     public void OnContinue()
     {
         string nextScene = SceneTracker.GetNextScene(currentDisaster, currentDifficulty);
@@ -118,7 +116,6 @@ public class TransitionSceneManager : MonoBehaviour
             Debug.LogWarning("No next mini-game found! Make sure your sequence is set up correctly.");
     }
 
-    // ✅ Retry button
     public void OnRetryButton()
     {
         string lastScene = SceneTracker.LastMinigameScene;
@@ -129,9 +126,8 @@ public class TransitionSceneManager : MonoBehaviour
             Debug.LogWarning("No last mini-game recorded! Cannot retry.");
     }
 
-    // ✅ Main Menu button
     public void OnMainMenuButton()
     {
-        SceneManager.LoadScene("DisasterSelection"); // 🔹 replace with your actual main menu scene name
+        SceneManager.LoadScene("DisasterSelection"); 
     }
 }

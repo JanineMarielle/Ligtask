@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - Are you ready for your quiz?
-  - Reach a passing score of 60% to be able to unlock Earthquake Hard mode!
+  - Reach a passing score of 70% to be able to unlock Earthquake Hard mode!
   - Let's go try your luck!
   voiceClips: []

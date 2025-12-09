@@ -4,50 +4,22 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using System.Reflection;
 
 public class MiniGameMenu : MonoBehaviour
 {
     [Header("UI References")]
-    public Button[] miniGameButtons; // regular minigames
-    public Button quizButton;        // assign quiz button separately
+    public Button[] miniGameButtons; // first button = Restart
 
     private void Start()
     {
         SetupMenu();
     }
 
-    public void GoToQuiz()
-    {
-        string disaster = SceneTracker.CurrentDisaster;
-        string difficulty = SceneTracker.CurrentDifficulty;
-
-        if (string.IsNullOrEmpty(disaster) || string.IsNullOrEmpty(difficulty))
-        {
-            Debug.LogError("[MiniGameMenu] Cannot go to quiz, disaster/difficulty missing!");
-            return;
-        }
-
-        // Get the quiz scene from SceneTracker instead of hardcoding
-        string key = $"{disaster}_{difficulty}";
-        var dictField = typeof(SceneTracker).GetField("miniGameSequences",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-        var dict = dictField.GetValue(null) as Dictionary<string, string[]>;
-        if (dict == null || !dict.ContainsKey(key))
-        {
-            Debug.LogError("[MiniGameMenu] Sequence not found for " + key);
-            return;
-        }
-
-        string quizScene = dict[key].Last();
-        Debug.Log($"[MiniGameMenu] Loading quiz scene: {quizScene}");
-        SceneManager.LoadScene(quizScene);
-    }
-
     public void SetupMenu()
     {
         string disaster = SceneTracker.CurrentDisaster;
         string difficulty = SceneTracker.CurrentDifficulty;
-        string currentScene = SceneTracker.LastMinigameScene;
 
         if (string.IsNullOrEmpty(disaster) || string.IsNullOrEmpty(difficulty))
         {
@@ -55,11 +27,15 @@ public class MiniGameMenu : MonoBehaviour
             return;
         }
 
-        // Get mini-game sequence
+        string currentScene = SceneManager.GetActiveScene().name;
+        bool isQuizScene = currentScene.ToLower().Contains("quiz");
+
+        // --- Access mini-game sequences through reflection ---
         string key = $"{disaster}_{difficulty}";
         var dictField = typeof(SceneTracker).GetField("miniGameSequences",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-        var dict = dictField.GetValue(null) as Dictionary<string, string[]>;
+            BindingFlags.NonPublic | BindingFlags.Static);
+        var dict = dictField?.GetValue(null) as Dictionary<string, string[]>;
+
         if (dict == null || !dict.ContainsKey(key))
         {
             Debug.LogError("[MiniGameMenu] No mini-games found for " + key);
@@ -67,52 +43,76 @@ public class MiniGameMenu : MonoBehaviour
         }
 
         string[] miniGames = dict[key];
-
         var progressList = DBManager.GetMiniGameProgress(disaster, difficulty);
-        var disasterProgress = DBManager.GetDisasterProgress(disaster);
 
-        // Regular minigames (exclude currentScene + quiz)
+        // Count non-quiz scenes for button limit
+        int nonQuizCount = miniGames.Count(scene => !scene.ToLower().Contains("quiz"));
+
         int buttonIndex = 0;
-        for (int i = 0; i < miniGames.Length - 1; i++) // exclude last (quiz)
+
+        // ------------------------------
+        // FIRST BUTTON = RESTART
+        // ------------------------------
+        Button restartButton = miniGameButtons[buttonIndex];
+        restartButton.gameObject.SetActive(true);
+
+        TMP_Text restartLabel = restartButton.GetComponentInChildren<TMP_Text>();
+        if (restartLabel != null)
+            restartLabel.text = isQuizScene ? "Restart Quiz" : "Restart";
+
+        restartButton.onClick.RemoveAllListeners();
+        restartButton.onClick.AddListener(() => SceneManager.LoadScene(currentScene));
+        restartButton.interactable = true;
+
+        buttonIndex++;
+
+        // ------------------------------
+        // QUIZ SCENE → ONLY Restart + Main Menu
+        // Hide all other buttons
+        // ------------------------------
+        if (isQuizScene)
+        {
+            for (; buttonIndex < miniGameButtons.Length; buttonIndex++)
+                miniGameButtons[buttonIndex].gameObject.SetActive(false);
+
+            return;
+        }
+
+        // ------------------------------
+        // REGULAR MINI-GAMES (No Quiz Buttons Allowed)
+        // ------------------------------
+        int shownButtons = 0;
+        for (int i = 0; i < miniGames.Length; i++)
         {
             string targetScene = miniGames[i];
 
+            // Skip current scene (restart already covers it)
             if (targetScene == currentScene)
                 continue;
 
-            if (buttonIndex >= miniGameButtons.Length)
+            // Skip quiz scenes in normal mode
+            if (targetScene.ToLower().Contains("quiz"))
+                continue;
+
+            if (buttonIndex >= miniGameButtons.Length || shownButtons >= nonQuizCount)
                 break;
 
-            int gameNumber = i + 1;
-            miniGameButtons[buttonIndex].gameObject.SetActive(true);
+            Button miniButton = miniGameButtons[buttonIndex];
+            miniButton.gameObject.SetActive(true);
 
-            TMP_Text label = miniGameButtons[buttonIndex].GetComponentInChildren<TMP_Text>();
+            int sceneIndex = i;
+            string capturedTarget = targetScene;
+
+            // LABEL
+            TMP_Text label = miniButton.GetComponentInChildren<TMP_Text>();
             if (label != null)
-                label.text = $"Game {gameNumber}";
+                label.text = $"Mini-game {sceneIndex + 1}";
 
-            miniGameButtons[buttonIndex].onClick.RemoveAllListeners();
+            // INTERACTABILITY
+            bool interactable = sceneIndex == 0 ||
+                                progressList.Any(p => p.MiniGameIndex == sceneIndex && p.Passed);
 
-            bool interactable = false;
-
-            if (i == 0)
-            {
-                if (difficulty == "Easy")
-                    interactable = true;
-                else if (difficulty == "Hard")
-                    interactable = disasterProgress != null && disasterProgress.QuizCompleted;
-            }
-            else
-            {
-                var prevGameProgress = progressList.FirstOrDefault(m => m.MiniGameIndex == i);
-                if (prevGameProgress != null && prevGameProgress.Passed)
-                    interactable = true;
-
-                var currentGameProgress = progressList.FirstOrDefault(m => m.MiniGameIndex == i + 1);
-                if (currentGameProgress != null && targetScene == currentScene)
-                    interactable = true;
-            }
-
-            miniGameButtons[buttonIndex].interactable = interactable;
+            miniButton.interactable = interactable;
 
             if (label != null)
             {
@@ -121,40 +121,22 @@ public class MiniGameMenu : MonoBehaviour
                 label.color = c;
             }
 
-            miniGameButtons[buttonIndex].onClick.AddListener(() =>
+            // BUTTON ACTION
+            miniButton.onClick.RemoveAllListeners();
+            miniButton.onClick.AddListener(() =>
             {
-                SceneTracker.SetCurrentMiniGame(disaster, difficulty, targetScene);
-                SceneManager.LoadScene(targetScene);
+                SceneTracker.SetCurrentMiniGame(disaster, difficulty, capturedTarget);
+                SceneManager.LoadScene(capturedTarget);
             });
 
             buttonIndex++;
+            shownButtons++;
         }
 
-        // Hide unused buttons
+        // ------------------------------
+        // HIDE UNUSED BUTTONS
+        // ------------------------------
         for (; buttonIndex < miniGameButtons.Length; buttonIndex++)
             miniGameButtons[buttonIndex].gameObject.SetActive(false);
-
-        // Quiz button
-        if (quizButton != null)
-        {
-            string quizScene = miniGames.Last();
-
-            quizButton.onClick.RemoveAllListeners();
-            quizButton.onClick.AddListener(GoToQuiz);
-
-            int lastMiniIndex = miniGames.Length - 2; // index before quiz
-            var lastGameProgress = progressList.FirstOrDefault(m => m.MiniGameIndex == lastMiniIndex + 1);
-            bool quizInteractable = lastGameProgress != null && lastGameProgress.Passed;
-
-            quizButton.interactable = quizInteractable;
-
-            TMP_Text quizLabel = quizButton.GetComponentInChildren<TMP_Text>();
-            if (quizLabel != null)
-            {
-                Color c = quizLabel.color;
-                c.a = quizInteractable ? 1f : 0.5f;
-                quizLabel.color = c;
-            }
-        }
     }
 }

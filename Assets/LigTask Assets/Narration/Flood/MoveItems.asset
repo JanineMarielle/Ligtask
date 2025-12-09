@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: MoveItems
   m_EditorClassIdentifier: 
   lines:
-  - 'Now that the power is off, the next step is to protect your important belongings. '
   - Floodwater can damage or destroy valuable belongings. We have to store them safely.
   - Drag important items to the ziploc bag to safely store them.
+  voiceClips: []
